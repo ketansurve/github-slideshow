@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feedback — Bihar State Law Commission</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Serif:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-nav="">
+<div class="wrap">
+<div id="chrome-header"></div>
+<div class="crumb"><a href="index.html" data-i18n="home">Home</a> &rsaquo; <span data-i18n="fb_h">Feedback</span></div>
+
+<main class="centre" id="main" style="max-width:640px;margin:0 auto">
+  <h2 class="pt" data-i18n="fb_h">Feedback</h2><div class="ptrule"></div>
+  <p class="pagebody" style="margin-top:0" data-i18n="fb_intro">Tell us about a problem with this website, or suggest an improvement. This is a front-end demo, so submissions are shown back to you on this page rather than e-mailed — wiring this form to the Commission's mailbox is a one-line backend task.</p>
+
+  <div class="formmsg ok" id="fbThanks" role="status"></div>
+
+  <form id="feedbackForm" novalidate>
+    <label for="fbName" data-i18n="fb_name">Name</label>
+    <input id="fbName" required autocomplete="name">
+    <label for="fbEmail" data-i18n="fb_email">E-mail</label>
+    <input id="fbEmail" type="email" required autocomplete="email">
+    <label for="fbType" data-i18n="fb_type">Type of Feedback</label>
+    <select id="fbType" style="width:100%;padding:8px 9px;border:1px solid var(--rule);font:inherit;margin-bottom:12px">
+      <option data-i18n="fb_t1">General comment</option>
+      <option data-i18n="fb_t2">Broken link or error</option>
+      <option data-i18n="fb_t3">Accessibility problem</option>
+      <option data-i18n="fb_t4">Suggestion</option>
+    </select>
+    <label for="fbMsg" data-i18n="fb_message">Message</label>
+    <textarea id="fbMsg" required rows="5" style="width:100%;padding:8px 9px;border:1px solid var(--rule);font:inherit;margin-bottom:12px"></textarea>
+    <button type="submit" class="sb" data-i18n="fb_submit">Submit Feedback</button>
+  </form>
+</main>
+
+<footer id="chrome-footer"></footer>
+</div>
+
+<script>
+window.BSLC_I18N_EXTRA = {
+  fb_h:{en:"Feedback", hi:"प्रतिक्रिया"},
+  fb_intro:{en:"Tell us about a problem with this website, or suggest an improvement. This is a front-end demo, so submissions are shown back to you on this page rather than e-mailed — wiring this form to the Commission's mailbox is a one-line backend task.",
+             hi:"इस वेबसाइट से संबंधित किसी समस्या के बारे में बताएं, अथवा सुधार का सुझाव दें। यह एक फ्रंट-एंड डेमो है, अतः सबमिशन ई-मेल के बजाय इसी पृष्ठ पर दिखाए जाते हैं — इस प्रपत्र को आयोग के मेलबॉक्स से जोड़ना एक सरल बैकएंड कार्य है।"},
+  fb_name:{en:"Name", hi:"नाम"},
+  fb_email:{en:"E-mail", hi:"ई-मेल"},
+  fb_type:{en:"Type of Feedback", hi:"प्रतिक्रिया का प्रकार"},
+  fb_t1:{en:"General comment", hi:"सामान्य टिप्पणी"},
+  fb_t2:{en:"Broken link or error", hi:"टूटा हुआ लिंक अथवा त्रुटि"},
+  fb_t3:{en:"Accessibility problem", hi:"सुगम्यता समस्या"},
+  fb_t4:{en:"Suggestion", hi:"सुझाव"},
+  fb_message:{en:"Message", hi:"संदेश"},
+  fb_submit:{en:"Submit Feedback", hi:"प्रतिक्रिया प्रस्तुत करें"},
+  fb_thanks:{en:"Thank you — your feedback has been recorded for this demo session.", hi:"धन्यवाद — आपकी प्रतिक्रिया इस डेमो सत्र हेतु दर्ज कर ली गई है।"}
+};
+</script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/chrome.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+document.getElementById("feedbackForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  var lang = document.documentElement.lang === "hi" ? "hi" : "en";
+  var thanks = document.getElementById("fbThanks");
+  var msg = lang==="hi" ? "धन्यवाद — आपकी प्रतिक्रिया इस डेमो सत्र हेतु दर्ज कर ली गई है।" : "Thank you — your feedback has been recorded for this demo session.";
+  thanks.textContent = msg;
+  thanks.classList.add("on");
+  this.reset();
+});
+</script>
+</body>
+</html>

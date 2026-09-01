@@ -76,8 +76,7 @@ h2.pt{font-size:1.21rem;color:var(--gob-blue-dk);margin:0 0 3px;font-family:'Not
 
 /* officials */
 .people{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:11px}
-.person{border:1px solid var(--rule);background:#fff}
-.portrait{height:118px;background:var(--gob-blue-lt);display:grid;place-items:center;color:#8CA4BC;font-size:.79rem;border-bottom:3px solid var(--saffron)}
+.person{border:1px solid var(--rule);border-top:3px solid var(--saffron);background:#fff}
 .person .b{padding:9px 10px}
 .person h4{margin:0;font-size:.96rem;color:var(--gob-blue-dk)}
 .person .r{font-size:.82rem;color:var(--madder);font-weight:700;margin:2px 0 5px}

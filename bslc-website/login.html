@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>User Login — Document Archive — Bihar State Law Commission</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Serif:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-nav="archive">
+<div class="wrap">
+<div id="chrome-header"></div>
+<div class="crumb"><a href="index.html" data-i18n="home">Home</a> &rsaquo; <a href="document-archive.html" data-i18n="archive">Document Archive</a> &rsaquo; <span data-i18n="user_login">User Login</span></div>
+
+<div class="layout two-col">
+  <nav class="leftnav" aria-label="Archive menu">
+    <h3 data-i18n="archive_menu">Archive Menu</h3>
+    <a href="login.html" aria-current="page" data-i18n="user_login">User Login</a>
+    <a href="#" data-i18n="new_reg">New Registration</a>
+    <a href="#" data-i18n="forgot_pw">Forgot Password</a>
+    <a href="downloads.html" data-i18n="user_manual">User Manual</a>
+    <a href="faq.html" data-i18n="faq">Help</a>
+  </nav>
+
+  <main class="centre" id="main">
+    <h2 class="pt" data-i18n="user_login">User Login</h2><div class="ptrule"></div>
+    <div class="lg">
+      <div class="lgart">
+        <h3 data-i18n="auth_only">Authorised access only</h3>
+        <ul>
+          <li data-i18n="lg_1">Government users may sign in through Jan Parichay / Bihar SSO.</li>
+          <li data-i18n="lg_2">Advocates and researchers must register and be approved by the Commission before first sign-in.</li>
+          <li data-i18n="lg_3">A one-time password is sent to the registered mobile number at every sign-in.</li>
+          <li data-i18n="lg_4">Accounts lock after five failed attempts.</li>
+        </ul>
+        <p style="font-size:.85rem;margin-top:16px;color:#9FB6CE" data-i18n="lg_it_act">Unauthorised access to this system is an offence under the Information Technology Act, 2000.</p>
+      </div>
+      <div class="lgf">
+        <p style="font-size:.83rem;background:#F7F9FB;border:1px solid var(--rule);padding:8px 10px" data-i18n="demo_note">Front-end demo: enter any User ID and Password, solve the captcha, request the OTP (shown on screen) and sign in — no real account is required.</p>
+        <div class="formmsg" id="loginMsg" role="alert"></div>
+        <form id="loginForm" novalidate>
+          <fieldset>
+            <label for="u" data-i18n="user_id">User ID</label>
+            <input id="u" data-i18n-ph="user_id_ph" placeholder="Registered user ID or NIC email" autocomplete="username">
+            <label for="p" data-i18n="password">Password</label>
+            <input id="p" type="password" placeholder="••••••••" autocomplete="current-password">
+            <label for="c" data-i18n="captcha">Captcha</label>
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+              <span id="captchaCode" style="background:var(--gob-blue-lt);padding:8px 14px;font-weight:700;letter-spacing:.2em;font-family:monospace;border:1px solid var(--rule)"></span>
+              <button type="button" id="captchaRefresh" class="sb ghost" style="width:auto;padding:8px 12px" data-i18n="refresh">Refresh</button>
+            </div>
+            <input id="c" style="margin-bottom:12px" data-i18n-ph="captcha_ph" placeholder="Type the code shown above" autocomplete="off">
+            <button type="button" id="sendOtpBtn" class="sb" data-i18n="send_otp">Send OTP and Sign In</button>
+            <div id="otpBlock" hidden style="margin-top:14px">
+              <label for="otp" data-i18n="otp">One-Time Password</label>
+              <p id="otpSentTo" style="font-size:.83rem;color:var(--ink-soft);margin:-6px 0 8px"></p>
+              <input id="otp" inputmode="numeric" maxlength="6" data-i18n-ph="otp_ph" placeholder="6-digit OTP">
+              <button type="button" id="signInBtn" class="sb" data-i18n="verify_signin">Verify OTP and Sign In</button>
+            </div>
+          </fieldset>
+          <p style="font-size:.87rem;margin-top:12px"><a href="#" data-i18n="forgot_pw">Forgot Password</a> &middot; <a href="#" data-i18n="new_reg">New Registration</a></p>
+          <p style="font-size:.87rem;border-top:1px solid var(--rule);padding-top:10px"><a href="#" id="janParichayBtn" style="font-weight:700;color:var(--madder)" data-i18n="jan_parichay">Sign in with Jan Parichay (Government users)</a></p>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer id="chrome-footer"></footer>
+</div>
+
+<script>
+window.BSLC_I18N_EXTRA = {
+  archive_menu:{en:"Archive Menu", hi:"अभिलेखागार मेनू"},
+  new_reg:{en:"New Registration", hi:"नया पंजीकरण"},
+  forgot_pw:{en:"Forgot Password", hi:"पासवर्ड भूल गए"},
+  user_manual:{en:"User Manual", hi:"उपयोगकर्ता पुस्तिका"},
+  auth_only:{en:"Authorised access only", hi:"केवल अधिकृत पहुँच"},
+  lg_1:{en:"Government users may sign in through Jan Parichay / Bihar SSO.", hi:"सरकारी उपयोगकर्ता जन परिचय / बिहार एसएसओ के माध्यम से साइन इन कर सकते हैं।"},
+  lg_2:{en:"Advocates and researchers must register and be approved by the Commission before first sign-in.", hi:"अधिवक्ताओं एवं शोधकर्ताओं को पहली बार साइन इन करने से पूर्व पंजीकरण कराना होगा तथा आयोग से अनुमोदन आवश्यक है।"},
+  lg_3:{en:"A one-time password is sent to the registered mobile number at every sign-in.", hi:"प्रत्येक साइन इन पर पंजीकृत मोबाइल नंबर पर एक ओटीपी भेजा जाता है।"},
+  lg_4:{en:"Accounts lock after five failed attempts.", hi:"पाँच असफल प्रयासों के पश्चात खाता लॉक हो जाता है।"},
+  lg_it_act:{en:"Unauthorised access to this system is an offence under the Information Technology Act, 2000.", hi:"इस प्रणाली तक अनधिकृत पहुँच सूचना प्रौद्योगिकी अधिनियम, 2000 के अंतर्गत अपराध है।"},
+  demo_note:{en:"Front-end demo: enter any User ID and Password, solve the captcha, request the OTP (shown on screen) and sign in — no real account is required.", hi:"फ्रंट-एंड डेमो: कोई भी उपयोगकर्ता आईडी एवं पासवर्ड दर्ज करें, कैप्चा हल करें, ओटीपी अनुरोध करें (स्क्रीन पर दिखेगा) एवं साइन इन करें — वास्तविक खाते की आवश्यकता नहीं।"},
+  user_id:{en:"User ID", hi:"उपयोगकर्ता आईडी"},
+  user_id_ph:{en:"Registered user ID or NIC email", hi:"पंजीकृत उपयोगकर्ता आईडी अथवा एनआईसी ई-मेल"},
+  password:{en:"Password", hi:"पासवर्ड"},
+  captcha:{en:"Captcha", hi:"कैप्चा"},
+  refresh:{en:"Refresh", hi:"पुनः प्राप्त करें"},
+  captcha_ph:{en:"Type the code shown above", hi:"ऊपर दिखाया गया कोड टाइप करें"},
+  send_otp:{en:"Send OTP and Sign In", hi:"ओटीपी भेजें एवं साइन इन करें"},
+  otp:{en:"One-Time Password", hi:"वन-टाइम पासवर्ड"},
+  otp_ph:{en:"6-digit OTP", hi:"6-अंकीय ओटीपी"},
+  verify_signin:{en:"Verify OTP and Sign In", hi:"ओटीपी सत्यापित करें एवं साइन इन करें"},
+  jan_parichay:{en:"Sign in with Jan Parichay (Government users)", hi:"जन परिचय से साइन इन करें (सरकारी उपयोगकर्ता)"}
+};
+</script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/chrome.js"></script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

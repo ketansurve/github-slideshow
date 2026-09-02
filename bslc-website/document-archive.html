@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Document Archive — Bihar State Law Commission</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Serif:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-nav="archive">
+<div class="wrap">
+<div id="chrome-header"></div>
+<div class="crumb"><a href="index.html" data-i18n="home">Home</a> &rsaquo; <a href="document-archive.html" data-i18n="archive">Document Archive</a> &rsaquo; <span data-i18n="search_documents">Search Documents</span></div>
+
+<div class="layout" id="archiveRoot">
+  <nav class="leftnav" aria-label="Archive menu">
+    <h3 data-i18n="archive_menu">Archive Menu</h3>
+    <a href="document-archive.html" aria-current="page" data-i18n="search_documents">Search Documents</a>
+    <a href="#" data-i18n="browse_year">Browse by Year</a>
+    <a href="#" data-i18n="browse_subject">Browse by Subject</a>
+    <a href="#" data-i18n="commission_terms">Commission Terms</a>
+    <a href="#" data-i18n="my_downloads">My Downloads</a>
+    <a href="#" data-i18n="sign_out" data-signout>Sign Out</a>
+  </nav>
+
+  <main class="centre" id="main">
+    <div style="font-size:.82rem;color:var(--madder);font-weight:700;letter-spacing:.06em;text-transform:uppercase">
+      <span data-i18n="signed_in_as">Restricted area &middot; signed in as</span> <span id="archiveUser"></span>
+    </div>
+    <h2 class="pt" data-i18n="archive">Document Archive</h2><div class="ptrule"></div>
+    <div class="lock" data-i18n="lock_note">🔒 Every view and download is logged. Downloaded files carry your user ID and a timestamp watermark. Master copies are PDF/A-2b, digitally signed.</div>
+
+    <div class="years" id="yearsBar"></div>
+    <div class="chips" id="chipsBar"></div>
+    <input type="text" class="searchbox" id="archiveSearch" data-i18n-ph="search_ph" placeholder="🔍 Full-text search across scanned records (OCR — Hindi &amp; English)">
+
+    <table>
+      <thead><tr>
+        <th data-i18n="col_document">Document</th><th data-i18n="col_type">Type</th><th data-i18n="col_date">Date</th>
+        <th data-i18n="col_access">Access</th><th data-i18n="col_pg">Pg</th><th></th>
+      </tr></thead>
+      <tbody id="archiveBody"></tbody>
+    </table>
+    <p id="archiveCount" style="font-size:.87rem;color:var(--ink-soft)"></p>
+  </main>
+
+  <aside class="rail">
+    <h3 data-i18n="access_legend">Access Legend</h3>
+    <div class="box" style="font-size:.87rem">
+      <p><span class="tag pub" data-i18n="pub">Public</span> <span data-i18n="pub_note">— also published on the citizen site</span></p>
+      <p><span class="tag res" data-i18n="res">Restricted</span> <span data-i18n="res_note">— approved logged-in users</span></p>
+      <p><span class="tag conf" data-i18n="conf">Confidential</span> <span data-i18n="conf_note">— named users, view only, no download</span></p>
+    </div>
+    <h3 data-i18n="storage">Storage</h3>
+    <div class="box" style="font-size:.87rem"><span data-i18n="documents">Documents</span> 12,418<br><span data-i18n="pages">Pages</span> 4,86,300<br><span data-i18n="indexed">Indexed</span> 97.4%</div>
+  </aside>
+</div>
+
+<footer id="chrome-footer"></footer>
+</div>
+
+<script>
+window.BSLC_I18N_EXTRA = {
+  archive_menu:{en:"Archive Menu", hi:"अभिलेखागार मेनू"},
+  search_documents:{en:"Search Documents", hi:"दस्तावेज़ खोजें"},
+  browse_year:{en:"Browse by Year", hi:"वर्ष के अनुसार देखें"},
+  browse_subject:{en:"Browse by Subject", hi:"विषय के अनुसार देखें"},
+  commission_terms:{en:"Commission Terms", hi:"आयोग के कार्यकाल"},
+  my_downloads:{en:"My Downloads", hi:"मेरे डाउनलोड"},
+  sign_out:{en:"Sign Out", hi:"साइन आउट"},
+  signed_in_as:{en:"Restricted area &middot; signed in as", hi:"प्रतिबंधित क्षेत्र &middot; साइन इन किया गया"},
+  lock_note:{en:"🔒 Every view and download is logged. Downloaded files carry your user ID and a timestamp watermark. Master copies are PDF/A-2b, digitally signed.",
+              hi:"🔒 प्रत्येक अवलोकन एवं डाउनलोड दर्ज किया जाता है। डाउनलोड की गई फ़ाइलों पर आपकी उपयोगकर्ता आईडी एवं समय-मुद्रांक वॉटरमार्क होता है। मूल प्रतियाँ PDF/A-2b, डिजिटल हस्ताक्षरित हैं।"},
+  search_ph:{en:"🔍 Full-text search across scanned records (OCR — Hindi &amp; English)", hi:"🔍 स्कैन किए गए अभिलेखों में पूर्ण-पाठ खोज (ओसीआर — हिन्दी एवं अंग्रेज़ी)"},
+  col_document:{en:"Document", hi:"दस्तावेज़"},
+  col_type:{en:"Type", hi:"प्रकार"},
+  col_date:{en:"Date", hi:"दिनांक"},
+  col_access:{en:"Access", hi:"पहुँच"},
+  col_pg:{en:"Pg", hi:"पृष्ठ"},
+  access_legend:{en:"Access Legend", hi:"पहुँच संकेत"},
+  pub:{en:"Public", hi:"सार्वजनिक"},
+  pub_note:{en:"— also published on the citizen site", hi:"— नागरिक साइट पर भी प्रकाशित"},
+  res:{en:"Restricted", hi:"प्रतिबंधित"},
+  res_note:{en:"— approved logged-in users", hi:"— अनुमोदित साइन-इन उपयोगकर्ता"},
+  conf:{en:"Confidential", hi:"गोपनीय"},
+  conf_note:{en:"— named users, view only, no download", hi:"— केवल नामित उपयोगकर्ता, केवल दर्शन, डाउनलोड नहीं"},
+  storage:{en:"Storage", hi:"भंडारण"},
+  documents:{en:"Documents", hi:"दस्तावेज़"},
+  pages:{en:"Pages", hi:"पृष्ठ"},
+  indexed:{en:"Indexed", hi:"अनुक्रमित"}
+};
+</script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/chrome.js"></script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

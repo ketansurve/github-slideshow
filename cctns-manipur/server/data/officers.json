@@ -1,0 +1,10 @@
+[
+  { "name": "Insp. R. K. Somorjit",  "station": "Lamphel PS",       "district": "Imphal West",   "assigned": 58, "chargesheeted": 46, "pending": 8,  "beyond90": 4, "disposalPct": 87.6, "qualityIndex": 78 },
+  { "name": "SI L. Ibemhal",         "station": "Porompat PS",      "district": "Imphal East",   "assigned": 49, "chargesheeted": 35, "pending": 10, "beyond90": 4, "disposalPct": 82.3, "qualityIndex": 71 },
+  { "name": "Insp. N. Bijoykumar",   "station": "Thoubal PS",       "district": "Thoubal",       "assigned": 45, "chargesheeted": 37, "pending": 6,  "beyond90": 2, "disposalPct": 90.2, "qualityIndex": 81 },
+  { "name": "SI Th. Rajkumar",       "station": "Bishnupur PS",     "district": "Bishnupur",     "assigned": 40, "chargesheeted": 24, "pending": 13, "beyond90": 3, "disposalPct": 70.5, "qualityIndex": 58 },
+  { "name": "SI K. Momon",           "station": "Churachandpur PS", "district": "Churachandpur", "assigned": 37, "chargesheeted": 28, "pending": 7,  "beyond90": 2, "disposalPct": 85.1, "qualityIndex": 75 },
+  { "name": "Insp. H. Dilip",        "station": "Kakching PS",      "district": "Kakching",      "assigned": 33, "chargesheeted": 19, "pending": 11, "beyond90": 3, "disposalPct": 68.4, "qualityIndex": 54 },
+  { "name": "SI Y. Sanajaoba",       "station": "Chandel PS",       "district": "Chandel",       "assigned": 28, "chargesheeted": 21, "pending": 6,  "beyond90": 1, "disposalPct": 84.0, "qualityIndex": 74 },
+  { "name": "SI M. Priyoranjan",     "station": "Senapati PS",      "district": "Senapati",      "assigned": 25, "chargesheeted": 16, "pending": 7,  "beyond90": 2, "disposalPct": 69.9, "qualityIndex": 56 }
+]

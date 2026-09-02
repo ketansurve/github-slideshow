@@ -1,0 +1,29 @@
+{
+  "kpis": [
+    { "label": "Composite quality index",           "value": "83.9",  "delta": "state average, out of 100",       "tone": "good" },
+    { "label": "Mandatory field completeness",       "value": "92.4%", "delta": "across IIF-1 to IIF-24",           "tone": "good" },
+    { "label": "Entered within 24 hrs",               "value": "77.0%", "delta": "FIR to CCTNS entry lag",           "tone": "warn" },
+    { "label": "Duplicate / conflicting records",      "value": "186",  "delta": "pending reconciliation",           "tone": "bad" },
+    { "label": "ICJS push failures",                   "value": "97",   "delta": "unacknowledged beyond 48 hrs",     "tone": "warn" },
+    { "label": "Accused without biometric link",        "value": "462",  "delta": "NAFIS mapping gap",                 "tone": "bad" }
+  ],
+  "dimensions": {
+    "labels": ["Completeness", "Accuracy", "Timeliness", "Consistency", "Uniqueness", "Integration"],
+    "state":  [92, 85, 77, 80, 83, 79],
+    "target": [98, 95, 95, 95, 99, 98]
+  },
+  "weakestForms": [
+    { "form": "IIF-20 Forensic result receipt", "percent": 63 },
+    { "form": "IIF-21 e-Sakshya upload",         "percent": 69 },
+    { "form": "IIF-24 Malkhana disposal",        "percent": 76 },
+    { "form": "IIF-13 Court disposal",           "percent": 81 },
+    { "form": "IIF-6 Case diary",                "percent": 85 }
+  ],
+  "exceptions": [
+    { "exception": "Section of law not mapped to BNS",         "form": "IIF-2",  "district": "Ukhrul",         "station": "Multiple",      "count": 58, "ageing": "14 days", "owner": "DCRB Ukhrul" },
+    { "exception": "Arrest memo without witness details",       "form": "IIF-3",  "district": "Chandel",        "station": "Chandel PS",    "count": 41, "ageing": "9 days",  "owner": "SDPO Chandel" },
+    { "exception": "Seizure without e-Sakshya reference",        "form": "IIF-21", "district": "Thoubal",        "station": "Thoubal PS",    "count": 33, "ageing": "21 days", "owner": "IIC Thoubal" },
+    { "exception": "Duplicate accused identity",                  "form": "IIF-15", "district": "Imphal East",    "station": "Porompat PS",   "count": 27, "ageing": "6 days",  "owner": "DCRB Imphal East" },
+    { "exception": "ICJS acknowledgement not received",            "form": "IIF-7",  "district": "Senapati",       "station": "Senapati PS",   "count": 19, "ageing": "3 days",  "owner": "SCRB integration cell" }
+  ]
+}

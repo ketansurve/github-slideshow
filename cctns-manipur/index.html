@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Police Monitoring System — CCTNS 2.0 / ICJS 2.0</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230b3c7e'/%3E%3Ctext x='50' y='63' font-size='46' text-anchor='middle' fill='%23ff9933' font-family='Arial'%3E%E2%9A%96%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/vendor/chart.umd.js"></script>
+</head>
+<body>
+
+<div class="gov-strip">
+  <span>Government of India · Ministry of Home Affairs · CCTNS 2.0 / ICJS 2.0</span>
+  <span>Restricted — authorised police users only</span>
+</div>
+
+<header class="masthead">
+  <div class="emblem">STATE<br>POLICE</div>
+  <div>
+    <h1>Police Monitoring System</h1>
+    <p id="office-line">Crime &amp; Criminal Tracking Network and Systems — State Police</p>
+  </div>
+  <div class="spacer"></div>
+  <div class="badge-role" id="role-badge" style="display:none"></div>
+  <button class="btn ghost" id="logout" style="display:none">Sign out</button>
+</header>
+
+<!-- ================= LOGIN ================= -->
+<section id="login">
+  <form class="login-card" onsubmit="return false">
+    <h2>Sign in</h2>
+    <p class="sub">Use your CCTNS application credentials. Visibility of districts, police stations and forms follows the role mapped to your CCTNS user.</p>
+    <div class="field">
+      <label for="uid">CCTNS user ID</label>
+      <input id="uid" autocomplete="username">
+    </div>
+    <div class="field">
+      <label for="pwd">Password</label>
+      <input id="pwd" type="password" value="demo-only" autocomplete="current-password">
+    </div>
+    <div class="field">
+      <label for="role">Role (demo — normally taken from CCTNS)</label>
+      <select id="role">
+        <option value="dgp">DGP / State HQ — all districts</option>
+        <option value="range">Range IG / DIG — range districts</option>
+        <option value="sp">SP — single district</option>
+        <option value="sho">SHO / IO — own police station</option>
+      </select>
+    </div>
+    <button class="btn full" id="signin">Sign in</button>
+    <p class="note">Prototype for design review. No live CCTNS connection, no real case data. Production build authenticates through the CCTNS identity service with the state's second factor.</p>
+  </form>
+</section>
+
+<!-- ================= APP ================= -->
+<div id="app">
+  <nav class="side">
+    <div class="who">
+      <strong id="who-name">—</strong>
+      <span id="who-desig">—</span>
+    </div>
+    <div class="grp">MONITORING</div>
+    <button data-p="dashboard" class="on">Dashboard</button>
+    <button data-p="iif">IIF Forms (1–24)</button>
+    <button data-p="cases">Case Monitoring</button>
+    <button data-p="io">IO Performance</button>
+    <button data-p="analytics">Crime Analytics</button>
+    <div class="grp">NEW CRIMINAL LAWS</div>
+    <button data-p="ncl">NCL &amp; NCLI KPIs</button>
+    <button data-p="quality">Data Quality Index</button>
+    <div class="grp">INTEGRATED VIEW</div>
+    <button data-p="cctv">PS CCTV Wall</button>
+    <button data-p="icjs">ICJS Pillars</button>
+    <button data-p="registers">Registers &amp; Reports</button>
+  </nav>
+
+  <main>
+    <div id="page"></div>
+  </main>
+</div>
+
+<footer>
+  Prototype — Police Monitoring System for CCTNS 2.0 / ICJS 2.0. Figures shown are illustrative sample data.
+  Production deployment to follow GIGW 3.0, MHA data-sharing norms and the state SDC hosting policy.
+</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/sample-data.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

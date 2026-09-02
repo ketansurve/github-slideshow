@@ -1,0 +1,12 @@
+[
+  { "station": "Lamphel PS",       "location": "Lock-up corridor",  "status": "up" },
+  { "station": "Lamphel PS",       "location": "Reception / GD",    "status": "up" },
+  { "station": "Porompat PS",      "location": "Malkhana entry",    "status": "up" },
+  { "station": "Thoubal PS",       "location": "Lock-up corridor",  "status": "down" },
+  { "station": "Bishnupur PS",     "location": "Front gate",        "status": "up" },
+  { "station": "Churachandpur PS", "location": "Interview room",    "status": "up" },
+  { "station": "Kakching PS",      "location": "Malkhana entry",    "status": "down" },
+  { "station": "Chandel PS",       "location": "Reception / GD",    "status": "up" },
+  { "station": "Moreh PS",         "location": "Lock-up corridor",  "status": "up" },
+  { "station": "Senapati PS",      "location": "Front gate",        "status": "up" }
+]

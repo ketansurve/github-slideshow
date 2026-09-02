@@ -1,0 +1,18 @@
+[
+  { "code": "BSN", "name": "Bishnupur" },
+  { "code": "CDL", "name": "Chandel" },
+  { "code": "CCP", "name": "Churachandpur" },
+  { "code": "IEA", "name": "Imphal East" },
+  { "code": "IWT", "name": "Imphal West" },
+  { "code": "JRB", "name": "Jiribam" },
+  { "code": "KKC", "name": "Kakching" },
+  { "code": "KMJ", "name": "Kamjong" },
+  { "code": "KPK", "name": "Kangpokpi" },
+  { "code": "NNY", "name": "Noney" },
+  { "code": "PHZ", "name": "Pherzawl" },
+  { "code": "SNP", "name": "Senapati" },
+  { "code": "TML", "name": "Tamenglong" },
+  { "code": "TNP", "name": "Tengnoupal" },
+  { "code": "TBL", "name": "Thoubal" },
+  { "code": "UKR", "name": "Ukhrul" }
+]

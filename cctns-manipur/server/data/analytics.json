@@ -1,0 +1,24 @@
+{
+  "yearlyTrendByCategory": {
+    "labels": ["2021", "2022", "2023", "2024", "2025", "2026"],
+    "series": [
+      { "label": "Property",             "color": "#0b3c7e", "data": [1420, 1510, 1640, 1590, 1710, 1220] },
+      { "label": "Crime against women",  "color": "#c0392b", "data": [640, 670, 720, 745, 775, 545] },
+      { "label": "NDPS",                 "color": "#138808", "data": [520, 610, 705, 780, 860, 615] },
+      { "label": "Cyber",                "color": "#ff9933", "data": [180, 240, 340, 460, 605, 510] }
+    ]
+  },
+  "timeOfDay": {
+    "labels": ["00", "03", "06", "09", "12", "15", "18", "21"],
+    "values": [64, 39, 47, 118, 168, 201, 272, 189]
+  },
+  "categoryShare": {
+    "labels": ["Property", "Body", "Women", "NDPS", "Cyber", "Misc"],
+    "values": [1220, 812, 545, 420, 510, 615],
+    "colors": ["#0b3c7e", "#16549b", "#c0392b", "#138808", "#ff9933", "#0e7c86"]
+  },
+  "districtHotspots": {
+    "labels": ["Imphal West", "Imphal East", "Thoubal", "Bishnupur", "Churachandpur", "Kakching"],
+    "values": [918, 822, 647, 599, 513, 467]
+  }
+}

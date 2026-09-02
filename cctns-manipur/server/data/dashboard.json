@@ -1,0 +1,22 @@
+{
+  "kpis": [
+    { "label": "Cognizable cases (2026)",        "value": "6,142",  "delta": "24,860 since 2015",       "tone": "" },
+    { "label": "Investigation pending",           "value": "1,414",  "delta": "318 beyond 90 days",      "tone": "bad" },
+    { "label": "Charge sheeted",                  "value": "4,412",  "delta": "71.8% disposal rate",     "tone": "good" },
+    { "label": "Zero FIR pending transfer",       "value": "19",     "delta": "of 156 registered",       "tone": "warn" },
+    { "label": "Arrest memo within 48 hrs",       "value": "85.1%",  "delta": "BNSS compliance",         "tone": "good" },
+    { "label": "e-Sakshya upload rate",           "value": "68.9%",  "delta": "target 95%",              "tone": "warn" }
+  ],
+  "monthlyTrend": {
+    "labels": ["Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+    "registered":    [980, 1040, 970, 1090, 1010, 690],
+    "chargesheeted": [700, 760, 705, 790, 730, 480]
+  },
+  "ageing": {
+    "labels": ["Under 30 days", "30-60 days", "60-90 days", "Beyond 90 days"],
+    "values": [612, 331, 153, 318]
+  },
+  "malkhana":       { "label": "Property seized 51,340 - acceptance pending 21,190",  "percent": 59 },
+  "missingPersons": { "label": "Registered 2,914 - traced 2,196",                     "percent": 75 },
+  "citizenService": { "label": "Received 74,120 - closed 64,890",                     "percent": 88 }
+}

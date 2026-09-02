@@ -1,0 +1,26 @@
+{
+  "kpis": [
+    { "label": "FIR under BNS (share)",              "value": "99.2%", "delta": "legacy IPC cases 0.8%",       "tone": "good" },
+    { "label": "e-Sakshya videography",               "value": "68.9%", "delta": "BSA s.63 - target 95%",       "tone": "warn" },
+    { "label": "Charge sheet within 90 days",          "value": "80.6%", "delta": "BNSS s.193(3)",                "tone": "good" },
+    { "label": "Forensic visit - 7 yr+ offences",       "value": "74.3%", "delta": "BNSS s.176(3) mandatory",      "tone": "warn" },
+    { "label": "Zero FIR transferred in 24 hrs",        "value": "85.9%", "delta": "BNSS s.173(1)",                "tone": "good" },
+    { "label": "e-Summons served electronically",       "value": "59.7%", "delta": "BNSS s.63-64",                 "tone": "bad" }
+  ],
+  "complianceByDistrict": {
+    "labels": ["Imphal West", "Imphal East", "Thoubal", "Bishnupur", "Churachandpur", "Kangpokpi"],
+    "series": [
+      { "label": "e-Sakshya",       "color": "#16549b", "data": [79, 72, 67, 63, 55, 69] },
+      { "label": "Forensic visit",  "color": "#138808", "data": [86, 78, 74, 68, 60, 76] },
+      { "label": "e-Summons",       "color": "#ff9933", "data": [68, 61, 55, 52, 46, 58] }
+    ]
+  },
+  "timelineTrend": {
+    "labels": ["Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+    "series": [
+      { "label": "Charge sheet <= 90 days", "color": "#138808", "data": [72, 75, 77, 79, 80, 80] },
+      { "label": "Zero FIR <= 24 hrs",       "color": "#0b3c7e", "data": [78, 80, 83, 84, 86, 86] },
+      { "label": "Case diary same day",      "color": "#ff9933", "data": [60, 63, 66, 68, 71, 73] }
+    ]
+  }
+}

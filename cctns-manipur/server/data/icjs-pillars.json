@@ -1,0 +1,8 @@
+[
+  { "pillar": "Police (CCTNS)",           "exchange": "6,142 FIR pushed to ICJS",                "ackRate": "98.9%", "health": "good" },
+  { "pillar": "Courts (eCourts)",         "exchange": "3,196 judgements consumed",               "ackRate": "95.7%", "health": "good" },
+  { "pillar": "Prosecution (eProsecution)", "exchange": "2,714 case files linked",               "ackRate": "90.4%", "health": "good" },
+  { "pillar": "Prisons (ePrisons)",       "exchange": "911 custody records matched",             "ackRate": "86.9%", "health": "watch" },
+  { "pillar": "Forensics (eForensics)",   "exchange": "1,512 requisitions, 1,196 results",       "ackRate": "77.5%", "health": "watch" },
+  { "pillar": "e-Sakshya / videography",  "exchange": "2,337 uploads against 2,810 seizures",    "ackRate": "68.9%", "health": "action" }
+]

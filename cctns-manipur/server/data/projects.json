@@ -1,0 +1,18 @@
+{
+  "alignedProjects": [
+    { "project": "Safe City / ICSS surveillance",  "coverage": "184 of 220 sites live",      "status": "good" },
+    { "project": "Dial 112 ERSS",                    "coverage": "All 16 districts",            "status": "good" },
+    { "project": "NAFIS biometric linkage",           "coverage": "74% accused mapped",          "status": "watch" },
+    { "project": "e-Sakshya rollout",                 "coverage": "62 of 92 PS",                 "status": "watch" },
+    { "project": "State forensic lab digitisation",    "coverage": "2 of 4 labs integrated",      "status": "action" }
+  ],
+  "pillarAckTrend": {
+    "labels": ["Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+    "series": [
+      { "label": "Courts",     "color": "#0b3c7e", "data": [91, 92, 93, 95, 95, 96] },
+      { "label": "Prisons",    "color": "#16549b", "data": [81, 82, 83, 85, 86, 87] },
+      { "label": "Forensics",  "color": "#ff9933", "data": [68, 70, 72, 75, 76, 78] },
+      { "label": "e-Sakshya",  "color": "#c0392b", "data": [48, 53, 58, 62, 66, 69] }
+    ]
+  }
+}

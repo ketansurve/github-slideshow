@@ -234,7 +234,11 @@ PAGES.analytics = async () => {
   mk("a2", { type: "line", data: { labels: a.timeOfDay.labels, datasets: [{ label: "Incidents", data: a.timeOfDay.values, borderColor: "#16549b", backgroundColor: "rgba(22,84,155,.18)", fill: true, tension: .4 }] }, options: BASE });
   mk("a3", { type: "pie", data: { labels: a.categoryShare.labels, datasets: [{ data: a.categoryShare.values, backgroundColor: a.categoryShare.colors }] },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "right", labels: { font: { size: 11 } } } } } });
-  mk("a4", { type: "bar", data: { labels: a.districtHotspots.labels, datasets: [{ label: "FIR registered", data: a.districtHotspots.values, backgroundColor: "#0b3c7e" }] }, options: { ...BASE, indexAxis: "y" } });
+  // Horizontal bar: with indexAxis "y", the x-scale is the numeric value axis
+  // and the y-scale is the category axis — the reverse of BASE's default
+  // (vertical-bar) scale roles, so they're swapped explicitly here.
+  mk("a4", { type: "bar", data: { labels: a.districtHotspots.labels, datasets: [{ label: "FIR registered", data: a.districtHotspots.values, backgroundColor: "#0b3c7e" }] },
+    options: { ...BASE, indexAxis: "y", scales: { x: { ...GRID, beginAtZero: true }, y: GRID } } });
 };
 
 PAGES.ncl = async () => {

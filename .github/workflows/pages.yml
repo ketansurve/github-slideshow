@@ -3,6 +3,8 @@ name: Deploy GitHub Pages
 on:
   push:
     branches: ["master"]
+  pull_request:
+    branches: ["master"]
   workflow_dispatch:
 
 permissions:
@@ -33,6 +35,9 @@ jobs:
         uses: actions/upload-pages-artifact@v3
 
   deploy:
+    # Pull requests only need the build validated above; actually publishing
+    # to the live Pages site happens on master pushes (or a manual dispatch).
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

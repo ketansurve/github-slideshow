@@ -127,7 +127,7 @@ test("public consultation: signed-out visitors are invited to sign in; the autho
   const form = page.locator(".ccard").filter({ hasText: "E2E Consultation Paper" }).locator("form.cform");
   await form.locator("textarea").fill("Clause 3 should allow e-filing.");
   await form.locator("button").click();
-  await expect(page.locator(".cthread")).toContainText("Clause 3 should allow e-filing.");
+  await expect(page.locator(".ccard").filter({ hasText: "E2E Consultation Paper" }).locator(".cthread")).toContainText("Clause 3 should allow e-filing.");
 });
 
 test("public consultation: a signed-in non-participant cannot comment", async ({ page }) => {
@@ -150,4 +150,82 @@ test("sign-out revokes the server session", async ({ page }) => {
     const r = await page.request.get("http://localhost:8090/auth/me", { headers: { Authorization: `Bearer ${token}` } });
     return r.status();
   }).toBe(401);
+});
+
+test("public suggestion → editor reviews, publishes and replies privately", async ({ page }) => {
+  // 1. A visitor without an account sends a suggestion to the consultation that accepts them.
+  await page.goto("public-consultation.html");
+  const card = page.locator(".ccard").filter({ hasText: "E2E Open Call for Suggestions" });
+  await expect(card).toContainText("seen only by the Commission and their author");
+  await card.locator('input[name="name"]').fill("Asha Devi");
+  await card.locator('input[name="email"]').fill("asha.devi@example.in");
+  await card.locator("textarea").fill("Please publish draft rules in Hindi as well.");
+  await card.locator('input[name="consent"]').check();
+  await card.locator("form.cform button").click();
+  await expect(card.locator(".cmsgbox")).toContainText("will be published after review");
+
+  // The participants-only consultation still offers no public form.
+  const closedCard = page.locator(".ccard").filter({ hasText: "E2E Consultation Paper" });
+  await expect(closedCard.locator('input[name="email"]')).toHaveCount(0);
+
+  // 2. The editor sees it (with the e-mail), publishes it and replies privately.
+  await page.goto("login.html?redirect=admin.html");
+  await signIn(page, E2E_USERS.editor);
+  await page.waitForURL(/admin\.html$/);
+  await page.click('#admNav [data-tab="consultations"]');
+  const admCard = page.locator(".ccard").filter({ hasText: "E2E Open Call for Suggestions" });
+  await expect(admCard).toContainText("accepted, with review");
+  await admCard.getByRole("button", { name: "Suggestions", exact: true }).click();
+  const item = admCard.locator(".cmsg").filter({ hasText: "Please publish draft rules in Hindi as well." });
+  await expect(item).toContainText("asha.devi@example.in");
+  await expect(item).toContainText("Awaiting review");
+  await item.getByRole("button", { name: "Publish" }).click();
+  await expect(admCard.locator(".cmsg").filter({ hasText: "Hindi as well" })).toContainText("Published");
+
+  page.once("dialog", (d) => d.accept("Thank you. Hindi drafts will be published from next month."));
+  await admCard.locator(".cmsg").filter({ hasText: "Hindi as well" }).getByRole("button", { name: "Reply privately" }).click();
+  await expect(page.locator("#admMsg")).toContainText("Reply saved");
+  await expect(admCard.locator(".creply")).toContainText("Hindi drafts will be published from next month.");
+
+});
+
+test("a signed-in visitor sees their own suggestion and the private reply", async ({ page }) => {
+  await page.goto("login.html?redirect=public-consultation.html");
+  await signIn(page, E2E_USERS.citizen);
+  await page.waitForURL(/public-consultation\.html$/);
+  const card = page.locator(".ccard").filter({ hasText: "E2E Open Call for Suggestions" });
+  await expect(card).toContainText("published after review");
+  await card.locator("textarea").fill("Add a glossary of legal terms.");
+  await card.locator("form.cform button").click();
+  await expect(card.locator(".cthread")).toContainText("Add a glossary of legal terms.");
+  await expect(card.locator(".cthread")).toContainText("Awaiting review");
+  // Someone else's suggestion on this PRIVATE consultation is not shown.
+  await expect(card.locator(".cthread")).not.toContainText("Hindi as well");
+});
+
+/* Downloads are refused here (acceptDownloads: false) because the locally
+   installed Edge closes the shared browser when a context holding a finished
+   download shuts down. The test still clicks the real button and checks the
+   CSV the page fetched from the API, and the confirmation the page shows. */
+test.describe("CSV export from the admin page", () => {
+  test.use({ acceptDownloads: false });
+  test("Download CSV fetches every suggestion, with e-mail and the private reply", async ({ page }) => {
+    await page.goto("login.html?redirect=admin.html");
+    await signIn(page, E2E_USERS.editor);
+    await page.waitForURL(/admin.html$/);
+    await page.click('#admNav [data-tab="consultations"]');
+    const admCard = page.locator(".ccard").filter({ hasText: "E2E Open Call for Suggestions" });
+    const resp = page.waitForResponse((r) => r.url().endsWith("/export.csv"));
+    await admCard.getByRole("button", { name: "Download CSV" }).click();
+    const r = await resp;
+    expect(r.status()).toBe(200);
+    expect(r.headers()["content-disposition"]).toMatch(/filename="suggestions-E2E-Open-Call-for-Suggestions.csv"/);
+    // The page consumed the body as a blob, so read the same export with the page's own token.
+    const token = await page.evaluate(() => sessionStorage.getItem("bslc_token"));
+    const csv = await (await page.request.get(r.url(), { headers: { Authorization: `Bearer ${token}` } })).text();
+    expect(csv).toContain("Please publish draft rules in Hindi as well.");
+    expect(csv).toContain("asha.devi@example.in");
+    expect(csv).toContain("Hindi drafts will be published from next month.");
+    await expect(page.locator("#admMsg")).toContainText("Downloaded suggestions-E2E-Open-Call-for-Suggestions.csv");
+  });
 });

@@ -9,7 +9,30 @@ const { execFileSync } = require("child_process");
 
 const SERVER_DIR = path.resolve(__dirname, "..");
 
+/* On Windows, a test runner that force-kills the Node process (Playwright
+   does this to its web servers) leaves PostgreSQL worker processes behind,
+   which keep the data folder's shared memory locked ("pre-existing shared
+   memory block is still in use"). Before starting, stop such orphans — but
+   only postgres.exe processes launched from THIS project's node_modules
+   whose parent process no longer exists. */
+function stopOrphanedPostgres() {
+  if (process.platform !== "win32") return;
+  const binRoot = path.join(SERVER_DIR, "node_modules").replace(/\\/g, "/");
+  const ps = `
+    $root = '${binRoot.replace(/'/g, "''")}';
+    Get-CimInstance Win32_Process -Filter "Name='postgres.exe'" | ForEach-Object {
+      $cmd = ($_.CommandLine -replace '\\\\', '/');
+      if ($cmd -like "*$root*" -and -not (Get-Process -Id $_.ParentProcessId -ErrorAction SilentlyContinue)) {
+        Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue
+      }
+    }`;
+  try {
+    execFileSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", ps], { stdio: "ignore", timeout: 20000 });
+  } catch (e) { /* best effort */ }
+}
+
 async function startPg({ name, port, database }) {
+  stopOrphanedPostgres();
   const { default: EmbeddedPostgres } = await import("embedded-postgres");
   const databaseDir = path.join(SERVER_DIR, ".data", name);
   const fresh = !fs.existsSync(path.join(databaseDir, "PG_VERSION"));

@@ -172,6 +172,9 @@ textarea:focus,select:focus{outline:3px solid var(--saffron);outline-offset:1px}
 .cmsg{border-left:3px solid var(--saffron);padding:4px 10px;margin-bottom:8px;background:#FAFBFC}
 .cmsg span{font-size:.8rem;color:var(--ink-soft)}
 .cmsg p{margin:4px 0 0;white-space:pre-wrap}
+.creply{margin:6px 0 2px 10px;padding:6px 10px;border-left:3px solid var(--gob-blue);background:var(--gob-blue-lt)}
+.creply span{font-size:.8rem;color:var(--ink-soft)}
+.cmsgbox{margin:8px 0}
 .adm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px}
 .adm-panel{margin-bottom:18px}
 .adm-panel h3{font-size:1rem;color:var(--gob-blue-dk);margin:16px 0 8px}
@@ -179,4 +182,4 @@ textarea:focus,select:focus{outline:3px solid var(--saffron);outline-offset:1px}
 .adm-actions button:hover{background:var(--gob-blue-lt)}
 .adm-panel .sb{width:auto;padding:8px 18px}
 .adm-scroll{overflow-x:auto}
-body.contrast .ccard,body.contrast .cnote,body.contrast .cmsg,body.contrast textarea,body.contrast select{background:#000;color:#fff;border-color:#333}
+body.contrast .ccard,body.contrast .cnote,body.contrast .cmsg,body.contrast .creply,body.contrast textarea,body.contrast select{background:#000;color:#fff;border-color:#333}

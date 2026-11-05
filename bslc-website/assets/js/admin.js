@@ -52,7 +52,9 @@
   function formData(form){
     var o = {};
     Array.prototype.forEach.call(form.elements, function(el){
-      if(!el.name || el.type === "file" || el.value === "") return;
+      if(!el.name || el.type === "file") return;
+      if(el.type === "checkbox"){ o[el.name] = el.checked; return; }
+      if(el.value === "") return;
       o[el.name] = el.type === "number" ? Number(el.value) : el.value;
     });
     return o;
@@ -172,8 +174,14 @@
         '<div><label for="kClose">Closes</label><input id="kClose" type="datetime-local" name="closesAt" required></div>' +
         '<div><label for="kStatus">Status</label><select id="kStatus" name="status">' + opts([["DRAFT","Draft"],["OPEN","Open"],["CLOSED","Closed"]]) + '</select></div>' +
         '<div><label for="kDoc">Consultation paper (document ID)</label><input id="kDoc" name="documentId"></div>' +
-      '</div><button class="sb">Create</button></form>' +
-      '<p style="font-size:.87rem;color:var(--ink-soft)">Only users you add as participants can read and post comments. Add them with their sign-in ID.</p>' +
+        '<div><label for="kVis">Who sees the suggestions</label><select id="kVis" name="visibility">' +
+          opts([["PARTICIPANTS","All authorised participants"],["PRIVATE","Only the Commission and each author"]]) + '</select></div>' +
+      '</div>' +
+      '<label style="text-transform:none;letter-spacing:0;font-weight:400;display:flex;gap:8px;align-items:flex-start;margin-bottom:12px">' +
+        '<input type="checkbox" name="allowPublic" style="width:auto;margin:3px 0 0"> ' +
+        '<span>Also accept suggestions from the public (anyone, with or without an account). They are held for your review before anyone else sees them.</span></label>' +
+      '<button class="sb">Create</button></form>' +
+      '<p style="font-size:.87rem;color:var(--ink-soft)">Only users you add as participants can take part, unless public suggestions are switched on. Add participants with their sign-in ID.</p>' +
       '<h3>Consultations</h3><div id="consTable">Loading…</div></div>';
     document.getElementById("fCons").addEventListener("submit", function(e){
       e.preventDefault(); clearMsg();
@@ -191,9 +199,16 @@
       el.innerHTML = list.map(function(c){
         return '<div class="ccard"><h3>' + esc(c.title) + ' <span class="tag ' + (c.isOpen ? "pub" : "res") + '">' + esc(c.status) + '</span></h3>' +
           '<p class="cdates">' + esc(new Date(c.opensAt).toLocaleString("en-IN")) + ' to ' + esc(new Date(c.closesAt).toLocaleString("en-IN")) + '</p>' +
+          '<p class="cdates">Suggestions seen by: <b>' + (c.visibility === "PRIVATE" ? "the Commission and each author only" : "all authorised participants") +
+            '</b> &middot; Public suggestions: <b>' + (c.allowPublic ? "accepted, with review" : "not accepted") + '</b></p>' +
           '<span class="adm-actions">' +
             (c.status !== "OPEN" ? btn("cons-status", c.id, "Open for comments", ' data-v="OPEN"') : btn("cons-status", c.id, "Close", ' data-v="CLOSED"')) +
+            btn("cons-set", c.id, c.visibility === "PRIVATE" ? "Share with participants" : "Make private", ' data-field="visibility" data-v="' + (c.visibility === "PRIVATE" ? "PARTICIPANTS" : "PRIVATE") + '"') +
+            btn("cons-set", c.id, c.allowPublic ? "Stop public suggestions" : "Accept public suggestions", ' data-field="allowPublic" data-v="' + (c.allowPublic ? "0" : "1") + '"') +
+            btn("cons-suggestions", c.id, "Suggestions") +
+            btn("cons-export", c.id, "Download CSV") +
           '</span>' +
+          '<div id="sugg-' + esc(c.id) + '"></div>' +
           '<div style="margin-top:8px"><b style="font-size:.85rem">Authorised participants</b><div id="parts-' + esc(c.id) + '">Loading…</div>' +
           '<form class="fPart" data-id="' + esc(c.id) + '" style="display:flex;gap:6px;margin-top:6px"><input name="userId" placeholder="Sign-in ID to add" style="margin:0">' +
           '<button class="sb" style="width:auto;padding:6px 12px">Add</button></form></div></div>';
@@ -209,6 +224,44 @@
           btn("part-remove", id, "Remove", ' data-user="' + esc(u.id) + '"') + '</span>';
       }).join("") : '<span style="color:var(--ink-soft);font-size:.87rem">None yet.</span>';
     }).catch(function(){});
+  }
+
+  var SUGG_STATUS = { PUBLISHED: "Published", PENDING: "Awaiting review", REJECTED: "Rejected" };
+  function loadSuggestions(id){
+    call("GET", "/consultations/" + q(id) + "/comments").then(function(list){
+      var el = document.getElementById("sugg-" + id); if(!el) return;
+      if(!list.length){ el.innerHTML = '<p class="cnote">No suggestions received yet.</p>'; return; }
+      el.innerHTML = '<div class="cthread"><h4>Suggestions received (' + list.length + ')</h4>' + list.map(function(m){
+        var who = esc(m.author) + (m.authorId ? " (" + esc(m.authorId) + ")" : m.publicEmail ? " &lt;" + esc(m.publicEmail) + "&gt; &middot; no account" : "");
+        var acts = '<span class="adm-actions">' +
+          (m.status !== "PUBLISHED" ? btn("sugg-status", id, "Publish", ' data-cm="' + esc(m.id) + '" data-v="PUBLISHED"') : "") +
+          (m.status !== "REJECTED" ? btn("sugg-status", id, "Reject", ' data-cm="' + esc(m.id) + '" data-v="REJECTED"') : "") +
+          btn("sugg-reply", id, m.reply ? "Edit reply" : "Reply privately", ' data-cm="' + esc(m.id) + '"') +
+          (m.reply ? btn("sugg-unreply", id, "Remove reply", ' data-cm="' + esc(m.id) + '"') : "") + '</span>';
+        return '<div class="cmsg"><b>' + who + '</b> <span>' + esc(new Date(m.createdAt).toLocaleString("en-IN")) + '</span> ' +
+          '<span class="tag ' + (m.status === "PUBLISHED" ? "pub" : "res") + '">' + esc(SUGG_STATUS[m.status] || m.status) + '</span>' +
+          '<p>' + esc(m.body) + '</p>' +
+          (m.reply ? '<div class="creply"><b>Your reply</b> (seen only by the author)<p>' + esc(m.reply) + '</p></div>' : "") +
+          acts + '</div>';
+      }).join("") + '</div>';
+      el.dataset.replies = JSON.stringify(list.reduce(function(acc, m){ acc[m.id] = m.reply || ""; return acc; }, {}));
+    }).catch(function(){});
+  }
+  /* Download through the API with the token (a plain link cannot carry it). */
+  function exportCsv(id){
+    fetch(B.apiBase() + "/consultations/" + q(id) + "/export.csv", { headers: { Authorization: "Bearer " + B.getToken() }, credentials: "omit" })
+      .then(function(res){
+        if(res.status === 401){ location.href = LOGIN; return null; }
+        if(!res.ok) throw new Error("Export failed (" + res.status + ")");
+        var m = /filename="([^"]+)"/.exec(res.headers.get("Content-Disposition") || "");
+        return res.blob().then(function(b){ return { blob: b, name: m ? m[1] : "suggestions.csv" }; });
+      }).then(function(f){
+        if(!f) return;
+        var url = URL.createObjectURL(f.blob), a = document.createElement("a");
+        a.href = url; a.download = f.name; document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
+        show("Downloaded " + f.name + ".", true);
+      }).catch(function(err){ show(err.message, false); });
   }
 
   /* ================= Users (ADMIN) ================= */
@@ -282,6 +335,25 @@
       case "doc-withdraw": call("PATCH", "/documents/" + q(id), { withdrawn: v === "1" }).then(loadDocuments).catch(function(){}); break;
       case "doc-grants": editGrants(id); break;
       case "cons-status": call("PATCH", "/consultations/" + q(id), { status: v }).then(loadConsultations).catch(function(){}); break;
+      case "cons-set":
+        var change = {}; change[b.dataset.field] = b.dataset.field === "allowPublic" ? v === "1" : v;
+        call("PATCH", "/consultations/" + q(id), change).then(loadConsultations).catch(function(){});
+        break;
+      case "cons-suggestions": loadSuggestions(id); break;
+      case "cons-export": exportCsv(id); break;
+      case "sugg-status":
+        call("PATCH", "/consultations/" + q(id) + "/comments/" + q(b.dataset.cm), { status: v }).then(function(){ loadSuggestions(id); }).catch(function(){});
+        break;
+      case "sugg-reply":
+        var holder = document.getElementById("sugg-" + id);
+        var current = holder && holder.dataset.replies ? (JSON.parse(holder.dataset.replies)[b.dataset.cm] || "") : "";
+        var text = window.prompt("Reply to this suggestion. Only its author (and the Commission) will see it:", current);
+        if(text && text.trim()) call("PATCH", "/consultations/" + q(id) + "/comments/" + q(b.dataset.cm), { reply: text.trim() })
+          .then(function(){ show("Reply saved.", true); loadSuggestions(id); }).catch(function(){});
+        break;
+      case "sugg-unreply":
+        call("PATCH", "/consultations/" + q(id) + "/comments/" + q(b.dataset.cm), { reply: null }).then(function(){ loadSuggestions(id); }).catch(function(){});
+        break;
       case "part-remove": call("DELETE", "/consultations/" + q(id) + "/participants/" + q(b.dataset.user)).then(function(){ loadParticipants(id); }).catch(function(){}); break;
       case "user-status": call("PATCH", "/users/" + q(id), { status: v }).then(loadUsers).catch(function(){}); break;
       case "user-password":

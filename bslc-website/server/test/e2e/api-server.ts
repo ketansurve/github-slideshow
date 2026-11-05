@@ -19,6 +19,7 @@ async function main() {
     JWT_SECRET: "e2e-secret-e2e-secret-e2e-secret-012345",
     OTP_DELIVERY: "response",
     AUTH_RATE_LIMIT: "10000",
+    PUBLIC_SUBMIT_LIMIT: "10000",
     CORS_ORIGINS: process.env.E2E_SITE_ORIGIN || "http://localhost:4174",
     STORAGE_DIR: path.join(__dirname, "..", "..", ".data", "e2e-uploads"),
   });
@@ -64,6 +65,11 @@ async function main() {
       opensAt: new Date(Date.now() - 86_400_000), closesAt: new Date(Date.now() + 30 * 86_400_000), createdById: editor.id },
   });
   await prisma.consultationParticipant.create({ data: { consultationId: c.id, userId: officer.id, addedBy: editor.id } });
+  await prisma.consultation.create({
+    data: { title: "E2E Open Call for Suggestions", summary: "Anyone may send suggestions; they are reviewed first.", status: "OPEN",
+      visibility: "PRIVATE", allowPublic: true,
+      opensAt: new Date(Date.now() - 86_400_000), closesAt: new Date(Date.now() + 30 * 86_400_000), createdById: editor.id },
+  });
 
   createApp().listen(Number(process.env.PORT), () => console.log(`e2e API on ${process.env.PORT}`));
 }

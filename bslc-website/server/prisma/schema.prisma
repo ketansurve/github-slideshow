@@ -58,6 +58,17 @@ enum ConsultationStatus {
   CLOSED
 }
 
+enum CommentVisibility {
+  PARTICIPANTS // every authorised participant sees all published suggestions
+  PRIVATE      // each person sees only their own suggestions; managers see all
+}
+
+enum CommentStatus {
+  PUBLISHED // accepted (participants' suggestions are published immediately)
+  PENDING   // public (non-participant) suggestion awaiting moderation
+  REJECTED  // moderated out; kept for the record, shown to managers only
+}
+
 model User {
   id             String     @id @default(uuid())
   userId         String     @unique // sign-in ID, e.g. NIC e-mail or registration ID
@@ -173,6 +184,12 @@ model Consultation {
   opensAt     DateTime
   closesAt    DateTime
   status      ConsultationStatus @default(DRAFT)
+  // Who can read the suggestions received.
+  visibility  CommentVisibility  @default(PARTICIPANTS)
+  // OFF by default: only allowlisted participants may submit. When ON, anyone
+  // (with or without an account) may also submit; those suggestions are
+  // held as PENDING until an editor approves them.
+  allowPublic Boolean            @default(false)
   documentId  String?
   document    Document?          @relation(fields: [documentId], references: [id])
   createdById String
@@ -196,13 +213,20 @@ model ConsultationParticipant {
 }
 
 model ConsultationComment {
-  id             String       @id @default(uuid())
+  id             String        @id @default(uuid())
   consultationId String
-  consultation   Consultation @relation(fields: [consultationId], references: [id])
-  userId         String
-  user           User         @relation(fields: [userId], references: [id])
+  consultation   Consultation  @relation(fields: [consultationId], references: [id])
+  userId         String?       // null for a suggestion sent without an account
+  user           User?         @relation(fields: [userId], references: [id])
+  publicName     String?       // given by a submitter without an account
+  publicEmail    String?       // shown to managers only, never to participants
   body           String
-  createdAt      DateTime     @default(now())
+  status         CommentStatus @default(PUBLISHED)
+  reply          String?       // the Commission's reply, visible to the author and managers only
+  repliedAt      DateTime?
+  repliedById    String?
+  moderatedById  String?
+  createdAt      DateTime      @default(now())
 
   @@index([consultationId, createdAt])
 }

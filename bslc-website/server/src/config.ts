@@ -22,6 +22,7 @@ const schema = z.object({
   MAX_FAILED_ATTEMPTS: z.coerce.number().int().min(1).default(5),
   LOCKOUT_MINUTES: z.coerce.number().int().min(1).default(30),
   AUTH_RATE_LIMIT: z.coerce.number().int().min(1).default(20), // per IP per 15 minutes
+  PUBLIC_SUBMIT_LIMIT: z.coerce.number().int().min(1).default(5), // public consultation suggestions, per IP per hour
   STORAGE_DIR: z.string().default("./.data/uploads"),
   MAX_UPLOAD_MB: z.coerce.number().positive().max(200).default(25),
   CLAMAV_HOST: z.string().optional(),

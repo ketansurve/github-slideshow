@@ -19,6 +19,7 @@ async function main() {
     JWT_SECRET: "e2e-secret-e2e-secret-e2e-secret-012345",
     OTP_DELIVERY: "response",
     AUTH_RATE_LIMIT: "10000",
+    PUBLIC_SUBMIT_LIMIT: "10000",
     CORS_ORIGINS: process.env.E2E_SITE_ORIGIN || "http://localhost:4174",
     STORAGE_DIR: path.join(__dirname, "..", "..", ".data", "e2e-uploads"),
   });

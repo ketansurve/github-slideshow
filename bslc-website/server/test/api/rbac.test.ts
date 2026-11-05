@@ -37,6 +37,8 @@ const routes: Route[] = [
   ["get", `/consultations/${X}/participants`, MANAGERS],
   ["post", `/consultations/${X}/participants`, MANAGERS],
   ["delete", `/consultations/${X}/participants/${X}`, MANAGERS],
+  ["patch", `/consultations/${X}/comments/${X}`, MANAGERS],
+  ["get", `/consultations/${X}/export.csv`, MANAGERS],
 ];
 
 const ROLES: Role[] = ["ADMIN", "EDITOR", "OFFICIAL", "PUBLIC"];

@@ -9,6 +9,7 @@ import { errorHandler } from "./http";
 import { authRouter } from "./routes/auth";
 import { usersRouter } from "./routes/users";
 import { auditRouter } from "./routes/audit";
+import { documentsRouter } from "./routes/documents";
 
 export function createApp() {
   const app = express();
@@ -35,6 +36,7 @@ export function createApp() {
   app.use("/auth", authRouter);
   app.use("/users", usersRouter);
   app.use("/audit", auditRouter);
+  app.use("/documents", documentsRouter);
 
   app.use((_req, res) => res.status(404).json({ error: "Not found" }));
   app.use(errorHandler);

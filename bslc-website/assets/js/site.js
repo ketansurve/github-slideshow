@@ -407,11 +407,39 @@
     }).catch(function(){ /* keep the static list */ });
   }
 
-  /* ---------------- Public Consultation (dynamic) ---------------- */
+  /* ---------------- Public Consultation (dynamic) ----------------
+     What a visitor may do is decided by the server for each consultation:
+     canComment (on the participant list, open) or canSubmitPublic (the
+     consultation accepts moderated suggestions from anyone). */
   var consultList = document.getElementById("consultList");
   if(consultList && API){
     var CONSULT_LOGIN = "login.html?redirect=public-consultation.html";
     var signedIn = !!B.getToken();
+    var STATUS_NOTE = { PENDING: "Awaiting review by the Commission", REJECTED: "Not published" };
+
+    var signedInForm = function(c, note){
+      return '<form class="cform" data-cid="' + esc(c.id) + '">' +
+        '<label for="cm-' + esc(c.id) + '">Your suggestions</label>' +
+        '<textarea id="cm-' + esc(c.id) + '" name="body" rows="5" maxlength="5000" required></textarea>' +
+        (note ? '<p class="cnote">' + note + '</p>' : "") +
+        '<button type="submit" class="sb" style="width:auto;padding:8px 16px">Submit suggestions</button></form>';
+    };
+    var publicForm = function(c){
+      var id = esc(c.id);
+      return '<form class="cform" data-cid="' + id + '" data-public="1">' +
+        '<div class="adm-grid">' +
+          '<div><label for="pn-' + id + '">Your name</label><input id="pn-' + id + '" name="name" required maxlength="120" autocomplete="name"></div>' +
+          '<div><label for="pe-' + id + '">E-mail</label><input id="pe-' + id + '" name="email" type="email" required maxlength="200" autocomplete="email"></div>' +
+        '</div>' +
+        '<label for="cm-' + id + '">Your suggestions</label>' +
+        '<textarea id="cm-' + id + '" name="body" rows="5" maxlength="5000" required></textarea>' +
+        '<label style="text-transform:none;letter-spacing:0;font-weight:400;display:flex;gap:8px;align-items:flex-start">' +
+          '<input type="checkbox" name="consent" required style="width:auto;margin:3px 0 0"> ' +
+          '<span>I agree that the Commission may record my name, e-mail and suggestion for this consultation, as described in the ' +
+          '<a href="privacy-policy.html">Privacy Policy</a>. My e-mail will not be published.</span></label>' +
+        '<p class="cnote">Suggestions from the public are published only after review by the Commission.</p>' +
+        '<button type="submit" class="sb" style="width:auto;padding:8px 16px">Submit suggestions</button></form>';
+    };
 
     var loadConsultations = function(){
       return B.api("GET", "/consultations").then(function(r){
@@ -421,10 +449,11 @@
           var status = c.isOpen ? '<span class="tag pub">Open</span>' : '<span class="tag res">Closed</span>';
           var action;
           if(c.canComment){
-            action = '<form class="cform" data-cid="' + esc(c.id) + '">' +
-              '<label for="cm-' + esc(c.id) + '">Your comments</label>' +
-              '<textarea id="cm-' + esc(c.id) + '" name="body" rows="5" maxlength="5000" required></textarea>' +
-              '<button type="submit" class="sb" style="width:auto;padding:8px 16px">Submit comments</button></form>';
+            action = signedInForm(c, "");
+          } else if(c.canSubmitPublic){
+            action = signedIn
+              ? signedInForm(c, "Your suggestion will be published after review by the Commission.")
+              : publicForm(c) + '<p class="cnote">Authorised participants: <a href="' + CONSULT_LOGIN + '">sign in</a> instead.</p>';
           } else if(c.isParticipant){
             action = '<p class="cnote">This consultation is closed for comments.</p>';
           } else if(!signedIn && c.isOpen){
@@ -433,15 +462,19 @@
           } else if(c.isOpen){
             action = '<p class="cnote">Your account is not on the list of authorised participants for this consultation.</p>';
           } else { action = ""; }
-          var thread = c.isParticipant ? '<div class="cthread" id="th-' + esc(c.id) + '"></div>' : "";
+          var showThread = c.isParticipant || (signedIn && c.allowPublic);
+          var visNote = c.visibility === "PRIVATE"
+            ? "Suggestions to this consultation are seen only by the Commission and their author."
+            : "Published suggestions are visible to the authorised participants.";
+          var thread = showThread ? '<div class="cthread" id="th-' + esc(c.id) + '"></div>' : "";
           return '<div class="ccard"><h3>' + esc(c.title) + ' ' + status + '</h3>' +
-            '<p class="cdates">Comments invited ' + esc(ddmmyyyy(c.opensAt)) + ' to ' + esc(ddmmyyyy(c.closesAt)) + '</p>' +
-            '<p>' + esc(c.summary) + '</p>' + thread + action + '</div>';
+            '<p class="cdates">Comments invited ' + esc(ddmmyyyy(c.opensAt)) + ' to ' + esc(ddmmyyyy(c.closesAt)) + ' &middot; ' + esc(visNote) + '</p>' +
+            '<p>' + esc(c.summary) + '</p>' + thread + '<div class="cmsgbox" id="ok-' + esc(c.id) + '"></div>' + action + '</div>';
         }).join("");
         consultList.hidden = false;
         var stat = document.getElementById("staticList"); if(stat) stat.hidden = true;
         var stub = document.querySelector("#main .stub"); if(stub) stub.hidden = true;
-        r.data.forEach(function(c){ if(c.isParticipant) loadThread(c.id); });
+        r.data.forEach(function(c){ if(c.isParticipant || (signedIn && c.allowPublic)) loadThread(c.id); });
       });
     };
 
@@ -449,8 +482,13 @@
       B.api("GET", "/consultations/" + encodeURIComponent(id) + "/comments").then(function(r){
         var el = document.getElementById("th-" + id);
         if(!el || !r.ok) return;
-        el.innerHTML = r.data.length ? '<h4>Comments received (' + r.data.length + ')</h4>' + r.data.map(function(m){
-          return '<div class="cmsg"><b>' + esc(m.author) + '</b> <span>' + esc(new Date(m.createdAt).toLocaleString("en-IN")) + '</span><p>' + esc(m.body) + '</p></div>';
+        el.innerHTML = r.data.length ? '<h4>Suggestions (' + r.data.length + ')</h4>' + r.data.map(function(m){
+          var badge = STATUS_NOTE[m.status] ? ' <span class="tag res">' + esc(STATUS_NOTE[m.status]) + '</span>' : "";
+          var reply = m.reply ? '<div class="creply"><b>Reply from the Commission</b>' +
+            (m.repliedAt ? ' <span>' + esc(new Date(m.repliedAt).toLocaleString("en-IN")) + '</span>' : "") +
+            '<p>' + esc(m.reply) + '</p></div>' : "";
+          return '<div class="cmsg"><b>' + esc(m.author) + (m.mine ? " (you)" : "") + '</b> <span>' +
+            esc(new Date(m.createdAt).toLocaleString("en-IN")) + '</span>' + badge + '<p>' + esc(m.body) + '</p>' + reply + '</div>';
         }).join("") : "";
       });
     };
@@ -460,13 +498,28 @@
       e.preventDefault();
       var btn = f.querySelector("button"); btn.disabled = true;
       var id = f.dataset.cid;
-      B.api("POST", "/consultations/" + encodeURIComponent(id) + "/comments", { body: f.body.value }).then(function(r){
+      var isPublic = f.dataset.public === "1";
+      var payload = isPublic
+        ? { body: f.elements["body"].value, name: f.elements["name"].value, email: f.elements["email"].value, consent: f.elements["consent"].checked }
+        : { body: f.elements["body"].value };
+      B.api("POST", "/consultations/" + encodeURIComponent(id) + "/comments", payload).then(function(r){
         btn.disabled = false;
-        if(r.status === 401){ location.href = CONSULT_LOGIN; return; }
-        if(!r.ok){ alert((r.data && r.data.error) || "Your comments could not be submitted."); return; }
-        f.body.value = "";
-        loadThread(id);
-      });
+        if(r.status === 401 && !isPublic){ location.href = CONSULT_LOGIN; return; }
+        if(!r.ok){
+          var issues = r.data && r.data.issues ? ": " + r.data.issues.map(function(i){ return i.message; }).join("; ") : "";
+          alert(((r.data && r.data.error) || "Your suggestions could not be submitted.") + issues);
+          return;
+        }
+        f.reset();
+        var ok = document.getElementById("ok-" + id);
+        if(ok){
+          ok.className = "cmsgbox formmsg on ok";
+          ok.textContent = r.data.status === "PENDING"
+            ? "Thank you. Your suggestion has been received and will be published after review."
+            : "Thank you. Your suggestion has been recorded.";
+        }
+        if(!isPublic) loadThread(id);
+      }).catch(function(){ btn.disabled = false; alert("The consultation service could not be reached. Please try again later."); });
     });
 
     loadConsultations().catch(function(){ /* keep the static text */ });

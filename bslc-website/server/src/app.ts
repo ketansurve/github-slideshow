@@ -12,6 +12,7 @@ import { auditRouter } from "./routes/audit";
 import { documentsRouter } from "./routes/documents";
 import { contentRouter } from "./routes/content";
 import { consultationsRouter } from "./routes/consultations";
+import { mountMockSms } from "./sms";
 
 export function createApp() {
   const app = express();
@@ -35,6 +36,8 @@ export function createApp() {
   app.use(authenticate);
 
   app.get("/health", (_req, res) => res.json({ ok: true }));
+  // Simulated phone inbox for local review; absent unless OTP_DELIVERY=mock-sms.
+  if (config.OTP_DELIVERY === "mock-sms") mountMockSms(app);
   app.use("/auth", authRouter);
   app.use("/users", usersRouter);
   app.use("/audit", auditRouter);

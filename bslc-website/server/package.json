@@ -14,7 +14,9 @@
     "seed": "tsx prisma/seed.ts",
     "test": "jest --runInBand",
     "test:e2e": "playwright test",
-    "static": "node scripts/static-server.cjs"
+    "static": "node scripts/static-server.cjs",
+    "seed:review": "tsx prisma/seed-review.ts",
+    "review": "node scripts/review.cjs"
   },
   "devDependencies": {
     "@playwright/test": "1.48.2",

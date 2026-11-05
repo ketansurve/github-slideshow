@@ -16,8 +16,9 @@ const schema = z.object({
   // How the sign-in OTP is delivered:
   //   console  — printed in the server log (development only)
   //   response — returned in the API response (automated tests only)
+  //   mock-sms — kept in a local "SMS outbox" shown at /dev/sms (local review only)
   //   sms      — the state SMS gateway; NOT IMPLEMENTED, needs NIC/CDAC onboarding
-  OTP_DELIVERY: z.enum(["console", "response", "sms"]).default("console"),
+  OTP_DELIVERY: z.enum(["console", "response", "mock-sms", "sms"]).default("console"),
   OTP_TTL_SECONDS: z.coerce.number().int().min(60).max(900).default(300),
   MAX_FAILED_ATTEMPTS: z.coerce.number().int().min(1).default(5),
   LOCKOUT_MINUTES: z.coerce.number().int().min(1).default(30),

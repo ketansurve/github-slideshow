@@ -110,6 +110,19 @@ BSLC_API_BASE=http://localhost:8080 node scripts/static-server.cjs 4174   # 3. s
 # open http://localhost:4174/github-slideshow/bslc-website/admin.html
 ```
 
+**Local review** (live mode with sample data and a simulated SMS inbox, one command):
+
+```
+npm run review
+# Website:   http://localhost:4174/github-slideshow/bslc-website/
+# SMS inbox: http://localhost:8080/dev/sms   (sign-in OTPs arrive here, as the SMS would read)
+# Accounts:  .data/review-accounts.txt       (one per role; new password each run)
+```
+
+The simulated inbox (`OTP_DELIVERY=mock-sms`) exists only on a local
+machine. The server refuses that setting in production, and `/dev/sms`
+is not served in any other mode.
+
 **Tests:**
 
 ```

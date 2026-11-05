@@ -8,6 +8,7 @@ import type { Role, User } from "@prisma/client";
 import { config } from "./config";
 import { prisma } from "./prisma";
 import { HttpError } from "./http";
+import { otpSmsText, sendMockSms } from "./sms";
 
 /* ---------------- passwords ---------------- */
 export const PASSWORD_RULE = /^(?=.*[A-Za-z])(?=.*\d).{10,128}$/;
@@ -44,6 +45,11 @@ export function otpMatches(challengeId: string, code: string, storedHash: string
 export async function deliverOtp(user: User, code: string): Promise<void> {
   if (config.OTP_DELIVERY === "console") {
     console.log(`[DEV ONLY] OTP for ${user.userId}: ${code}`);
+    return;
+  }
+  if (config.OTP_DELIVERY === "mock-sms") {
+    if (!user.mobile) throw new HttpError(400, "No mobile number is registered for this account", "NO_MOBILE");
+    sendMockSms(user.mobile, otpSmsText(code, Math.round(config.OTP_TTL_SECONDS / 60)));
     return;
   }
   if (config.OTP_DELIVERY === "sms") {

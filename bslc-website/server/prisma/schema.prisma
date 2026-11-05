@@ -1,0 +1,226 @@
+// Bihar State Law Commission — website backend schema (PostgreSQL).
+// Access decisions are taken in src/policy.ts against these records; the
+// static frontend never decides who may see what.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN    // manages users and roles; full access
+  EDITOR   // publishes content, documents, consultations
+  OFFICIAL // internal departmental user
+  PUBLIC   // registered public visitor (advocate, researcher, citizen)
+}
+
+enum UserStatus {
+  PENDING  // self-registered, awaiting Commission approval
+  ACTIVE
+  LOCKED   // too many failed sign-in attempts
+  DISABLED // access withdrawn; records kept for audit
+}
+
+enum AccessLevel {
+  PUB  // public
+  RES  // restricted: approved signed-in users
+  CONF // confidential: named users only, view only
+}
+
+enum ContentKind {
+  CIRCULAR
+  NOTIFICATION
+  NOTICE
+  LINK
+  RECORD
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ScanStatus {
+  PENDING  // not yet scanned; only admins may open it
+  CLEAN    // passed the ClamAV scan
+  INFECTED // never stored; kept as a record of the rejected upload
+  SKIPPED  // released by an admin after manual review (no scanner available)
+}
+
+enum ConsultationStatus {
+  DRAFT
+  OPEN
+  CLOSED
+}
+
+model User {
+  id             String     @id @default(uuid())
+  userId         String     @unique // sign-in ID, e.g. NIC e-mail or registration ID
+  name           String
+  email          String?
+  mobile         String?
+  passwordHash   String
+  role           Role       @default(PUBLIC)
+  status         UserStatus @default(PENDING)
+  failedAttempts Int        @default(0)
+  lockedUntil    DateTime?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  sessions       Session[]
+  otpChallenges  OtpChallenge[]
+  grants         DocumentGrant[]
+  participations ConsultationParticipant[]
+  comments       ConsultationComment[]
+}
+
+model OtpChallenge {
+  id         String    @id @default(uuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  codeHash   String
+  attempts   Int       @default(0)
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Session {
+  jti       String    @id
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  ip        String?
+  userAgent String?
+
+  @@index([userId])
+}
+
+model ContentItem {
+  id          String        @id @default(uuid())
+  kind        ContentKind
+  titleEn     String
+  titleHi     String?
+  bodyEn      String?
+  bodyHi      String?
+  url         String?       // external reference / link (http/https only)
+  refNo       String?       // e.g. "Notification No. 4127"
+  issuedOn    DateTime?
+  status      ContentStatus @default(DRAFT)
+  accessLevel AccessLevel   @default(PUB)
+  documentId  String?
+  document    Document?     @relation(fields: [documentId], references: [id])
+  createdById String
+  updatedById String
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([kind, status])
+}
+
+model Document {
+  id           String        @id @default(uuid())
+  title        String
+  docType      String        // Report, Minutes, Notification, Correspondence, Working Paper, ...
+  issuedOn     DateTime?
+  year         Int
+  accessLevel  AccessLevel   @default(RES)
+  pages        Int?
+  originalName String
+  mime         String
+  sizeBytes    Int
+  sha256       String
+  storageKey   String        @unique
+  scanStatus   ScanStatus    @default(PENDING)
+  withdrawn    Boolean       @default(false)
+  uploadedById String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  grants        DocumentGrant[]
+  contentItems  ContentItem[]
+  consultations Consultation[]
+
+  @@index([year, docType])
+}
+
+// Named-user access to a CONF document.
+model DocumentGrant {
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  grantedBy  String
+  createdAt  DateTime @default(now())
+
+  @@id([documentId, userId])
+}
+
+model Consultation {
+  id          String             @id @default(uuid())
+  title       String
+  summary     String
+  opensAt     DateTime
+  closesAt    DateTime
+  status      ConsultationStatus @default(DRAFT)
+  documentId  String?
+  document    Document?          @relation(fields: [documentId], references: [id])
+  createdById String
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  participants ConsultationParticipant[]
+  comments     ConsultationComment[]
+}
+
+// Allowlist: only these users may read and post comments.
+model ConsultationParticipant {
+  consultationId String
+  consultation   Consultation @relation(fields: [consultationId], references: [id])
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  addedBy        String
+  createdAt      DateTime     @default(now())
+
+  @@id([consultationId, userId])
+}
+
+model ConsultationComment {
+  id             String       @id @default(uuid())
+  consultationId String
+  consultation   Consultation @relation(fields: [consultationId], references: [id])
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  body           String
+  createdAt      DateTime     @default(now())
+
+  @@index([consultationId, createdAt])
+}
+
+// Append-only. The migration adds a trigger that rejects UPDATE and DELETE.
+model AuditLog {
+  id        BigInt   @id @default(autoincrement())
+  at        DateTime @default(now())
+  actorId   String?  // User.id, null for anonymous
+  actorUser String?  // User.userId at the time, for readability
+  action    String   // e.g. LOGIN_SUCCESS, DOCUMENT_VIEW, USER_UPDATE
+  entity    String?
+  entityId  String?
+  ip        String?
+  userAgent String?
+  detail    Json?
+
+  @@index([at])
+  @@index([actorId])
+  @@index([entity, entityId])
+}

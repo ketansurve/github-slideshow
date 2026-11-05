@@ -19,6 +19,7 @@
     var sendBtn = document.getElementById("sendOtpBtn");
     var signInBtn = document.getElementById("signInBtn");
     var otpSentTo = document.getElementById("otpSentTo");
+    var quickDemoBtn = document.getElementById("quickDemoBtn");
     var DEMO_OTP = "123456";
 
     function newCaptcha(){
@@ -34,22 +35,30 @@
     }
     function lockCheck(){
       if(attempts >= 5){
-        showMsg("This account is locked after 5 failed attempts. Contact the Records Officer to unlock it, or try again after 30 minutes.", false);
+        showMsg("This account is locked after 5 failed attempts. Click 'Refresh' to reset the lockout in this demo, or contact the Records Officer.", false);
         if(sendBtn) sendBtn.disabled = true;
         if(signInBtn) signInBtn.disabled = true;
         return true;
       }
+      if(sendBtn) sendBtn.disabled = false;
+      if(signInBtn) signInBtn.disabled = false;
       return false;
     }
 
     newCaptcha();
     lockCheck();
     var refreshBtn = document.getElementById("captchaRefresh");
-    if(refreshBtn) refreshBtn.addEventListener("click", function(e){ e.preventDefault(); newCaptcha(); });
+    if(refreshBtn) refreshBtn.addEventListener("click", function(e){
+      e.preventDefault();
+      attempts = 0;
+      sessionStorage.removeItem("bslc_attempts");
+      newCaptcha();
+      lockCheck();
+      if(captchaInput) captchaInput.value = "";
+      showMsg("Captcha refreshed and attempt lock reset.", true);
+    });
 
-    loginForm.addEventListener("submit", function(e){ e.preventDefault(); });
-
-    if(sendBtn) sendBtn.addEventListener("click", function(){
+    function triggerSendOtp(){
       if(lockCheck()) return;
       var u = document.getElementById("u").value.trim();
       var p = document.getElementById("p").value.trim();
@@ -67,9 +76,9 @@
       showMsg("OTP sent. This is a front-end demo, so the OTP is shown above instead of by SMS.", true);
       sendBtn.disabled = true;
       otpInput.focus();
-    });
+    }
 
-    if(signInBtn) signInBtn.addEventListener("click", function(){
+    function triggerSignIn(){
       if(lockCheck()) return;
       var u = document.getElementById("u").value.trim();
       if(otpBlock.hidden){ showMsg("Request an OTP first.", false); return; }
@@ -83,8 +92,52 @@
       sessionStorage.setItem("bslc_user", u || "guest");
       sessionStorage.removeItem("bslc_attempts");
       var params = new URLSearchParams(location.search);
-      location.href = params.get("redirect") || "document-archive.html";
+      var target = params.get("redirect") || "document-archive.html";
+      location.href = target;
+    }
+
+    if(sendBtn) sendBtn.addEventListener("click", triggerSendOtp);
+    if(signInBtn) signInBtn.addEventListener("click", triggerSignIn);
+
+    loginForm.addEventListener("submit", function(e){
+      e.preventDefault();
+      if(otpBlock && !otpBlock.hidden){
+        triggerSignIn();
+      } else {
+        triggerSendOtp();
+      }
     });
+
+    var inputs = [document.getElementById("u"), document.getElementById("p"), captchaInput, otpInput];
+    inputs.forEach(function(inputEl){
+      if(inputEl){
+        inputEl.addEventListener("keydown", function(e){
+          if(e.key === "Enter"){
+            e.preventDefault();
+            if(otpBlock && !otpBlock.hidden){
+              triggerSignIn();
+            } else {
+              triggerSendOtp();
+            }
+          }
+        });
+      }
+    });
+
+    if(quickDemoBtn){
+      quickDemoBtn.addEventListener("click", function(e){
+        e.preventDefault();
+        attempts = 0;
+        sessionStorage.removeItem("bslc_attempts");
+        lockCheck();
+        document.getElementById("u").value = "officer@bihar.gov.in";
+        document.getElementById("p").value = "DemoPass123";
+        captchaInput.value = captchaText;
+        triggerSendOtp();
+        if(otpInput) otpInput.value = DEMO_OTP;
+        if(signInBtn) signInBtn.focus();
+      });
+    }
 
     var janParichay = document.getElementById("janParichayBtn");
     if(janParichay) janParichay.addEventListener("click", function(e){

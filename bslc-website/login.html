@@ -37,6 +37,9 @@
       </div>
       <div class="lgf">
         <p style="font-size:.83rem;background:#F7F9FB;border:1px solid var(--rule);padding:8px 10px" data-i18n="demo_note">Front-end demo: enter any User ID and Password, solve the captcha, request the OTP (shown on screen) and sign in — no real account is required.</p>
+        <div style="margin-bottom:12px">
+          <button type="button" id="quickDemoBtn" class="sb ghost" style="width:100%;font-size:.85rem;padding:7px 10px;border-style:dashed;cursor:pointer" data-i18n="quick_fill">⚡ Quick Demo Auto-Fill &amp; Sign In</button>
+        </div>
         <div class="formmsg" id="loginMsg" role="alert"></div>
         <form id="loginForm" novalidate>
           <fieldset>
@@ -82,6 +85,8 @@ window.BSLC_I18N_EXTRA = {
   lg_4:{en:"Accounts lock after five failed attempts.", hi:"पाँच असफल प्रयासों के पश्चात खाता लॉक हो जाता है।"},
   lg_it_act:{en:"Unauthorised access to this system is an offence under the Information Technology Act, 2000.", hi:"इस प्रणाली तक अनधिकृत पहुँच सूचना प्रौद्योगिकी अधिनियम, 2000 के अंतर्गत अपराध है।"},
   demo_note:{en:"Front-end demo: enter any User ID and Password, solve the captcha, request the OTP (shown on screen) and sign in — no real account is required.", hi:"फ्रंट-एंड डेमो: कोई भी उपयोगकर्ता आईडी एवं पासवर्ड दर्ज करें, कैप्चा हल करें, ओटीपी अनुरोध करें (स्क्रीन पर दिखेगा) एवं साइन इन करें — वास्तविक खाते की आवश्यकता नहीं।"},
+  live_note:{en:"Secure sign-in: your password is checked by the Commission’s server and a one-time password is sent to your registered mobile number.", hi:"सुरक्षित साइन इन: आपका पासवर्ड आयोग के सर्वर द्वारा जाँचा जाता है तथा आपके पंजीकृत मोबाइल नंबर पर एक ओटीपी भेजा जाता है।"},
+  quick_fill:{en:"⚡ Quick Demo Auto-Fill & Sign In", hi:"⚡ त्वरित डेमो स्वतः-भरें एवं साइन इन करें"},
   user_id:{en:"User ID", hi:"उपयोगकर्ता आईडी"},
   user_id_ph:{en:"Registered user ID or NIC email", hi:"पंजीकृत उपयोगकर्ता आईडी अथवा एनआईसी ई-मेल"},
   password:{en:"Password", hi:"पासवर्ड"},
@@ -95,6 +100,8 @@ window.BSLC_I18N_EXTRA = {
   jan_parichay:{en:"Sign in with Jan Parichay (Government users)", hi:"जन परिचय से साइन इन करें (सरकारी उपयोगकर्ता)"}
 };
 </script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api.js"></script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/chrome.js"></script>
 <script src="assets/js/site.js"></script>

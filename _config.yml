@@ -113,5 +113,6 @@ exclude: [
   "reveal.js/CONTRIBUTING.md",
   "reveal.js/LICENSE",
   "reveal.js/package.json",
-  "cctns-manipur/server"
+  "cctns-manipur/server",
+  "bslc-website/server"
 ]

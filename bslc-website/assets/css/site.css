@@ -159,3 +159,24 @@ body.contrast footer{background:#000;border-top:1px solid #333}
 
 @media(max-width:880px){.layout{grid-template-columns:1fr}.layout.two-col{grid-template-columns:1fr}.leftnav,.rail{border:0}.lg{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---- dynamic sections (API mode): consultation, administration ---- */
+[hidden]{display:none!important}  /* .leftnav a etc. set display:block, which would otherwise override the hidden attribute */
+textarea,select{width:100%;padding:8px 9px;border:1px solid var(--rule);font:inherit;margin-bottom:12px;background:#fff}
+textarea:focus,select:focus{outline:3px solid var(--saffron);outline-offset:1px}
+.ccard{border:1px solid var(--rule);border-top:3px solid var(--gob-blue);padding:12px 14px;margin-bottom:14px;background:#fff}
+.ccard h3{margin:0 0 4px;font-size:1.02rem;color:var(--gob-blue-dk)}
+.ccard .cdates{font-size:.85rem;color:var(--ink-soft);margin:0 0 8px}
+.cnote{font-size:.9rem;background:#F7F9FB;border:1px solid var(--rule);padding:8px 10px}
+.cthread h4{font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin:10px 0 6px}
+.cmsg{border-left:3px solid var(--saffron);padding:4px 10px;margin-bottom:8px;background:#FAFBFC}
+.cmsg span{font-size:.8rem;color:var(--ink-soft)}
+.cmsg p{margin:4px 0 0;white-space:pre-wrap}
+.adm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px}
+.adm-panel{margin-bottom:18px}
+.adm-panel h3{font-size:1rem;color:var(--gob-blue-dk);margin:16px 0 8px}
+.adm-actions button{font:inherit;font-size:.82rem;padding:3px 8px;margin:0 4px 4px 0;border:1px solid var(--gob-blue);background:#fff;color:var(--gob-blue);cursor:pointer}
+.adm-actions button:hover{background:var(--gob-blue-lt)}
+.adm-panel .sb{width:auto;padding:8px 18px}
+.adm-scroll{overflow-x:auto}
+body.contrast .ccard,body.contrast .cnote,body.contrast .cmsg,body.contrast textarea,body.contrast select{background:#000;color:#fff;border-color:#333}

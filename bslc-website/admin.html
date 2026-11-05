@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Site Administration — Bihar State Law Commission</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Serif:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-nav="archive">
+<div class="wrap">
+<div id="chrome-header"></div>
+<div class="crumb"><a href="index.html" data-i18n="home">Home</a> &rsaquo; <a href="document-archive.html" data-i18n="archive">Document Archive</a> &rsaquo; <span data-i18n="adm_title">Site Administration</span></div>
+
+<div class="layout two-col">
+  <nav class="leftnav" aria-label="Administration menu" id="admNav">
+    <h3 data-i18n="adm_menu">Administration</h3>
+    <a href="#content" data-tab="content" data-i18n="adm_content">Notices &amp; Circulars</a>
+    <a href="#documents" data-tab="documents" data-i18n="adm_documents">Documents</a>
+    <a href="#consultations" data-tab="consultations" data-i18n="adm_consultations">Consultations</a>
+    <a href="#users" data-tab="users" data-admin-only data-i18n="adm_users">Users</a>
+    <a href="#audit" data-tab="audit" data-admin-only data-i18n="adm_audit">Audit Log</a>
+    <a href="document-archive.html" data-i18n="archive">Document Archive</a>
+    <a href="#" data-i18n="sign_out" data-signout>Sign Out</a>
+  </nav>
+
+  <main class="centre" id="main">
+    <div style="font-size:.82rem;color:var(--madder);font-weight:700;letter-spacing:.06em;text-transform:uppercase">
+      <span data-i18n="adm_signed_in">Administration &middot; signed in as</span> <span id="admUser"></span>
+    </div>
+    <h2 class="pt" data-i18n="adm_title">Site Administration</h2><div class="ptrule"></div>
+    <div class="lock" data-i18n="adm_note">🔒 Every change made here is checked against your role by the Commission's server and recorded in the audit log.</div>
+    <div class="formmsg" id="admMsg" role="alert"></div>
+    <div id="admRoot"></div>
+  </main>
+</div>
+
+<footer id="chrome-footer"></footer>
+</div>
+
+<script>
+window.BSLC_I18N_EXTRA = {
+  adm_title:{en:"Site Administration", hi:"साइट प्रशासन"},
+  adm_menu:{en:"Administration", hi:"प्रशासन"},
+  adm_content:{en:"Notices &amp; Circulars", hi:"सूचनाएँ एवं परिपत्र"},
+  adm_documents:{en:"Documents", hi:"दस्तावेज़"},
+  adm_consultations:{en:"Consultations", hi:"परामर्श"},
+  adm_users:{en:"Users", hi:"उपयोगकर्ता"},
+  adm_audit:{en:"Audit Log", hi:"लेखा परीक्षा लॉग"},
+  adm_signed_in:{en:"Administration &middot; signed in as", hi:"प्रशासन &middot; साइन इन किया गया"},
+  adm_note:{en:"🔒 Every change made here is checked against your role by the Commission's server and recorded in the audit log.", hi:"🔒 यहाँ किया गया प्रत्येक परिवर्तन आयोग के सर्वर द्वारा आपकी भूमिका के अनुसार जाँचा जाता है तथा लेखा परीक्षा लॉग में दर्ज किया जाता है।"},
+  sign_out:{en:"Sign Out", hi:"साइन आउट"}
+};
+</script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/chrome.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>

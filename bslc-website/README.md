@@ -47,12 +47,37 @@ optionally with `?query` or `#hash`. Anything else (`javascript:`, other hosts,
 | Public (PUB) documents and published content | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Restricted (RES) documents and content | | ✓ | ✓ | ✓ | ✓ |
 | Confidential (CONF) documents, view only | | named only | named only | uploader or named | ✓ |
-| Comment on a consultation | | if on its participant list | if on its list | if on its list | if on its list |
+| Send suggestions to a consultation | only if it accepts public suggestions (reviewed first) | if on its participant list (or public suggestions on, reviewed first) | same | same | same |
+| Review, publish/reject, reply to and export suggestions | | | | ✓ | ✓ |
 | Publish content, upload documents, run consultations | | | | ✓ | ✓ |
 | Manage users, read audit log, release unscanned files | | | | | ✓ |
 
 Self-registered visitors start as PENDING and cannot sign in until an ADMIN
 approves them. Five failed password/OTP attempts lock the account for 30 minutes.
+
+### Public consultation: how suggestions work
+
+An editor creates a consultation in **Site Administration → Consultations**
+and chooses two settings, both of which can be changed later:
+
+- **Who sees the suggestions.** *All authorised participants* (default): every
+  participant sees all published suggestions. *Only the Commission and each
+  author*: each person sees only their own.
+- **Accept suggestions from the public.** Off by default, so only the people
+  the editor adds as participants can take part. When switched on, anyone may
+  also submit, with or without an account. A submitter without an account gives
+  a name, an e-mail address and privacy-policy consent. These suggestions are
+  held as *awaiting review* until an editor publishes or rejects them, and they
+  are limited to `PUBLIC_SUBMIT_LIMIT` per address per hour. E-mail
+  addresses are shown only to editors and admins.
+
+Participants' suggestions are published at once. Under **Suggestions** an
+editor sees everything received and can **Publish**, **Reject** (kept on
+record, never shown), **Reply privately** (seen only by that author and the
+Commission), and **Download CSV** of every suggestion with status, author,
+e-mail, reply and timestamps, ready for the Commission's report. Each of these
+actions is recorded in the audit log. Nothing is accepted after the closing
+time.
 
 ## Run and test locally
 
@@ -146,6 +171,14 @@ These are **not** implemented, and each needs a decision or an external service:
   but they are not implemented. "View only" for confidential files prevents the
   download link, not screenshots or saving from the viewer.
 - **Full-text (OCR) search.** Search currently matches titles only.
+- **E-mail notifications.** Replies to suggestions appear on the site for
+  signed-in authors. People who submitted without an account are not e-mailed,
+  because no mail gateway is configured; they would need NIC mail/SMTP.
+- **Public suggestions and spam.** Public suggestions are moderated and rate
+  limited, but there is no server-side CAPTCHA yet (see above). Keep public
+  suggestions switched off until one is chosen, or moderate closely.
+  Publishing comments from the public also needs the Commission's approval of
+  the privacy-policy wording.
 - **Hosting and data protection.** Hosting location and data residency; backup
   and retention periods for records and audit logs; a DPDP Act 2023 privacy
   notice and consent wording for registered visitors.

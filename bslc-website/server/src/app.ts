@@ -10,6 +10,8 @@ import { authRouter } from "./routes/auth";
 import { usersRouter } from "./routes/users";
 import { auditRouter } from "./routes/audit";
 import { documentsRouter } from "./routes/documents";
+import { contentRouter } from "./routes/content";
+import { consultationsRouter } from "./routes/consultations";
 
 export function createApp() {
   const app = express();
@@ -37,6 +39,8 @@ export function createApp() {
   app.use("/users", usersRouter);
   app.use("/audit", auditRouter);
   app.use("/documents", documentsRouter);
+  app.use("/content", contentRouter);
+  app.use("/consultations", consultationsRouter);
 
   app.use((_req, res) => res.status(404).json({ error: "Not found" }));
   app.use(errorHandler);

@@ -19,6 +19,9 @@ async function startPg({ name, port, database }) {
     user: "postgres",
     password: "postgres",
     persistent: true,
+    // Hindi (Devanagari) content needs UTF-8; on Windows initdb would
+    // otherwise pick the system code page (e.g. WIN1252).
+    initdbFlags: ["--encoding=UTF8", "--locale=C"],
     onLog: () => {},
     onError: (m) => { if (process.env.PG_DEBUG) console.error(m); },
   });

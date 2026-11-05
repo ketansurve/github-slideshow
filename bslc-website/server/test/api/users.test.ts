@@ -66,6 +66,18 @@ describe("ADMIN operations", () => {
     expect(r.status).toBe(400);
   });
 
+  test("editors can look up one active user by exact ID, but not list users", async () => {
+    const { token } = await tokenFor("EDITOR");
+    const o = await makeUser("OFFICIAL");
+    const p = await makeUser("PUBLIC", { status: "PENDING" });
+    const r = await request(app).get(`/users/lookup?userId=${encodeURIComponent(o.userId)}`).set(bearer(token));
+    expect(r.status).toBe(200);
+    expect(r.body).toEqual({ id: o.id, userId: o.userId, name: o.name, role: "OFFICIAL" });
+    expect((await request(app).get(`/users/lookup?userId=${encodeURIComponent(p.userId)}`).set(bearer(token))).status).toBe(404);
+    expect((await request(app).get(`/users/lookup?userId=official`).set(bearer(token))).status).toBe(404);
+    expect((await request(app).get("/users").set(bearer(token))).status).toBe(403);
+  });
+
   test("audit log is readable by ADMIN", async () => {
     const { token } = await tokenFor("ADMIN");
     const r = await request(app).get("/audit?action=LOGIN_SUCCESS").set(bearer(token));

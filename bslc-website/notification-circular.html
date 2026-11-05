@@ -18,7 +18,8 @@
   <main class="centre" id="main">
     <h2 class="pt" data-i18n="h_key"></h2><div class="ptrule"></div>
     <p class="pagebody" style="margin-top:0" data-i18n="lead_key"></p>
-    <ul class="pagebody">
+    <div id="contentList" hidden></div>
+    <ul class="pagebody" id="staticList">
       <li data-i18n="pt_0"></li>
       <li data-i18n="pt_1"></li>
       <li data-i18n="pt_2"></li>
@@ -30,7 +31,7 @@
   <aside class="rail"><h3 data-i18n="related">Related</h3><div class="box">
       <a href="reports.html" data-i18n="rel_0"></a>
       <a href="document-archive.html" data-i18n="rel_1"></a>
-  </div></aside>
+  </div><h3 id="linkHead" hidden data-i18n="ext_links">External Links</h3><div class="box" id="linkList" hidden></div></aside>
 </div>
 
 <footer id="chrome-footer"></footer>
@@ -46,10 +47,13 @@ window.BSLC_I18N_EXTRA = {
   pt_2:{en:"Notification — Reconstitution of the Commission (15.06.2024)", hi:"अधिसूचना — आयोग का पुनर्गठन (15.06.2024)"},
   rel_0:{en:"Reports & Publications", hi:"प्रतिवेदन एवं प्रकाशन"},
   rel_1:{en:"Document Archive", hi:"दस्तावेज़ अभिलेखागार"},
+  ext_links:{en:"External Links", hi:"बाह्य लिंक"},
   related:{en:"Related", hi:"संबंधित"},
   stub_note:{en:"This page is a content placeholder reflecting the approved information architecture. Final text will be supplied and approved by the Commission before go-live.", hi:"यह पृष्ठ स्वीकृत सूचना संरचना को दर्शाने वाला एक अस्थायी सामग्री स्थान है। अंतिम पाठ लॉन्च से पूर्व आयोग द्वारा प्रदान एवं स्वीकृत किया जाएगा।"}
 };
 </script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api.js"></script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/chrome.js"></script>
 <script src="assets/js/site.js"></script>

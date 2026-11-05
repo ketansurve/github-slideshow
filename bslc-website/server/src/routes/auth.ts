@@ -102,7 +102,7 @@ authRouter.post("/logout", requireAuth, ah(async (req, res) => {
 
 authRouter.get("/me", requireAuth, (req, res) => {
   const u = req.user!;
-  res.json({ userId: u.userId, name: u.name, role: u.role });
+  res.json({ id: u.id, userId: u.userId, name: u.name, role: u.role });
 });
 
 /* Self-registration for advocates / researchers / citizens. Creates a

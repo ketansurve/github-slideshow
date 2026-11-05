@@ -18,7 +18,8 @@
   <main class="centre" id="main">
     <h2 class="pt" data-i18n="h_key"></h2><div class="ptrule"></div>
     <p class="pagebody" style="margin-top:0" data-i18n="lead_key"></p>
-    <ul class="pagebody">
+    <div id="consultList" hidden></div>
+    <ul class="pagebody" id="staticList">
       <li data-i18n="pt_0"></li>
       <li data-i18n="pt_1"></li>
     </ul>
@@ -48,6 +49,8 @@ window.BSLC_I18N_EXTRA = {
   stub_note:{en:"This page is a content placeholder reflecting the approved information architecture. Final text will be supplied and approved by the Commission before go-live.", hi:"यह पृष्ठ स्वीकृत सूचना संरचना को दर्शाने वाला एक अस्थायी सामग्री स्थान है। अंतिम पाठ लॉन्च से पूर्व आयोग द्वारा प्रदान एवं स्वीकृत किया जाएगा।"}
 };
 </script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api.js"></script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/chrome.js"></script>
 <script src="assets/js/site.js"></script>

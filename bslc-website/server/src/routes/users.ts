@@ -8,6 +8,20 @@ import { audit } from "../audit";
 import { PASSWORD_RULE, hashPassword, requireRole } from "../auth";
 
 export const usersRouter = Router();
+
+/* Exact-match lookup by sign-in ID, so an EDITOR can name a user as a
+   consultation participant or a confidential-document reader without
+   being able to list or browse accounts. Active accounts only. */
+usersRouter.get("/lookup", requireRole("ADMIN", "EDITOR"), ah(async (req, res) => {
+  const { userId } = z.object({ userId: z.string().trim().min(3).max(120) }).parse(req.query);
+  const u = await prisma.user.findFirst({
+    where: { userId, status: "ACTIVE" },
+    select: { id: true, userId: true, name: true, role: true },
+  });
+  if (!u) throw new HttpError(404, "No active user with that ID");
+  res.json(u);
+}));
+
 usersRouter.use(requireRole("ADMIN"));
 
 const ROLES = ["ADMIN", "EDITOR", "OFFICIAL", "PUBLIC"] as const;

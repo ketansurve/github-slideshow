@@ -19,6 +19,7 @@ const MANAGERS: Role[] = ["ADMIN", "EDITOR"];
 
 const routes: Route[] = [
   ["get", "/users", ADMIN_ONLY],
+  ["get", "/users/lookup?userId=nobody", MANAGERS],
   ["post", "/users", ADMIN_ONLY],
   ["patch", `/users/${X}`, ADMIN_ONLY],
   ["post", `/users/${X}/password`, ADMIN_ONLY],

@@ -48,3 +48,19 @@ test("Quick Demo button signs in and honours redirect", async ({ page }) => {
   await page.click("#signInBtn");
   await page.waitForURL(/document-archive\.html$/);
 });
+
+/* Added with the redirect hardening: hostile values must never leave the
+   site or run script; they fall back to document-archive.html. */
+for (const hostile of [
+  "javascript:window.__pwned=1",
+  "https://example.org/",
+  "//example.org/document-archive.html",
+  "/\\example.org",
+]) {
+  test(`hostile redirect ${JSON.stringify(hostile)} falls back to the archive`, async ({ page }) => {
+    await page.goto("login.html?redirect=" + encodeURIComponent(hostile));
+    await demoSignIn(page);
+    await page.waitForURL(/\/github-slideshow\/bslc-website\/document-archive\.html$/);
+    expect(await page.evaluate(() => (window as any).__pwned)).toBeUndefined();
+  });
+}

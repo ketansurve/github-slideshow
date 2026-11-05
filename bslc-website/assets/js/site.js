@@ -92,7 +92,9 @@
       sessionStorage.setItem("bslc_user", u || "guest");
       sessionStorage.removeItem("bslc_attempts");
       var params = new URLSearchParams(location.search);
-      var target = params.get("redirect") || "document-archive.html";
+      /* Only same-site pages are accepted (see assets/js/api.js); anything
+         else, or a missing value, falls back to document-archive.html. */
+      var target = window.BSLC ? window.BSLC.safeRedirect(params.get("redirect")) : "document-archive.html";
       location.href = target;
     }
 
